@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pruvia</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+  </head>
+  <script type="text/javascript">
+      window.pruvia_logo = "<%= image_url('symbol-red-128x128.png') %>";
+      window.pruvia_logo_with_text = "<%= image_url('red_log_black_text.BIG_PA.png') %>"
+      window.emotional_health = "<%= image_url('emotional_health.png') %>"
+      window.overall_health = "<%= image_url('overall_health.png') %>"
+      window.login = "<%= image_url('login.png') %>"
+  </script>
+  <body>
+    <%= yield %>
+  </body>
+</html>

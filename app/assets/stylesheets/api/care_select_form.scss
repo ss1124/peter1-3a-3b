@@ -1,0 +1,42 @@
+#care-select-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    > h1 {
+        margin: 5vh;
+        font-weight: 300;
+    }
+    > div {
+        display: flex;
+        width: 80%;
+        height: 26vh;
+        justify-content: center;
+        align-items: center;
+        > div {
+            cursor: pointer;
+            transition: .2s;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 4px rgba(0,0,0,0.1), 0 5px 20px rgba(0,0,0,0.05);
+            height: 100%;
+            width: 40%;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center; 
+            > img {
+                height: 50%;
+                width: auto;
+            }
+            > h4 {
+                font-weight: 400
+            }
+        }
+    }
+}
+
+.card-hoverable:hover {
+    transform: scale(1.03);
+    transition: .2s;
+}
