@@ -1,24 +1,24 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Done:
+- #1 (Select Care Type)
+    - Navigation bar allows user to go to login and splash page.
+    - User can select overall/emotional health
+- #3a (Sign up) 
+    - User password is hashed before it is stored in the database.
+    - Display error messages when email has been taken, email is invalid, password is invalid
+- #3b (login)
+    - User credentials are verified safely. 
+    - Display different error messages when user inputs unregistered email or incorrect password
 
-Things you may want to cover:
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+To Do:
+- #1 (Select Care Type)
+    - Not responsive to mobile screen sizes.
+- #3a (Sign up)
+    - Not responsive to mobile screen sizes.
+    - User should see password strength/password requirements
+- #3b (Login)
+    - Not responsive to mobile screen sizes.
+    - User can switch to register form by clicking on "create account" above form
+    
