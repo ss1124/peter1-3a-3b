@@ -13,6 +13,8 @@ Done:
 
 
 To Do:
+- General:
+    - Add Favicon
 - #1 (Select Care Type)
     - Not responsive to mobile screen sizes.
 - #3a (Sign up)
