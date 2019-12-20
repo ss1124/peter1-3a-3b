@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import { login } from '../../util/session_api_util';
 import LoginNavBar from '../login_nav_bar/login_nav_bar';
 class LoginForm extends React.Component {

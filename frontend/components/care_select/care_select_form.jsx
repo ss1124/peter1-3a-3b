@@ -11,6 +11,7 @@ class CareSelectForm extends React.Component {
     }
 
     handleEmotional() {
+      debugger
       this.props.history.push('/schedule');
     }
 

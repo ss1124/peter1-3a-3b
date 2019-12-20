@@ -11,6 +11,7 @@ Done:
     - User credentials are verified safely. 
     - Display different error messages when user inputs unregistered email or incorrect password
 
+
 To Do:
 - General:
     - Add Favicon

@@ -31,8 +31,6 @@ class SignupForm extends React.Component {
     this.props.clearErrors();
   }
 
-
-
   render() {
     return (
       <>

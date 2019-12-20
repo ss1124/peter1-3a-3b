@@ -1,0 +1,1 @@
+json.partial! "api/meetings/meeting", meeting: @meeting
