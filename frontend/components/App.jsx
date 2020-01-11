@@ -15,6 +15,8 @@ import {
   HashRouter
 } from 'react-router-dom';
 
+
+
 const App = () => (
   <div>
     <Switch>
@@ -22,8 +24,8 @@ const App = () => (
       <AuthRoute exact path="/login" component={LogInFormContainer} />
       <AuthRoute exact path="/signup" component={SignUpFormContainer} />
       {/* both logged in and loggout out users can access*/}
-      <Route path="/care_select" component={CareSelectForm} />
-      <Route path="/schedule" component={ScheduleContainer} />
+      <ProtectedRoute path="/care_select" component={CareSelectForm} />
+      <ProtectedRoute path="/schedule" component={ScheduleContainer} />
       <ProtectedRoute exact path="" component={IndexContainer}/>
 
     </Switch>
