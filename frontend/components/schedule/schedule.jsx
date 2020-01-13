@@ -9,10 +9,9 @@ class Schedule extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            begin_time: '',
-            end_time: '',
             user_id: '',
             curr_time: null,
+            date: null
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -20,14 +19,12 @@ class Schedule extends React.Component {
     }
 
     componentDidMount() {
-        debugger
-        setInterval(() => {
-            debugger
-            this.setState({
-                // curr_time : hour + ":" + minute + " " + AM_or_PM
-                curr_time: this.getTime()
-            })
-        },1000)
+        // setInterval(() => {
+        //     this.setState({
+        //         // curr_time : hour + ":" + minute + " " + AM_or_PM
+        //         curr_time: this.getTime()
+        //     })
+        // },1000)
     }
 
     getTime() {
@@ -52,18 +49,41 @@ class Schedule extends React.Component {
         e.preventDefault();
         this.props.createMeeting(this.state);
     }
+    //<div>Date Chosen: {this.state.date.getUTCDay()} </div>
 
     render() {
         // momentObject.toString()
         // momentObject.format()
         // momentObject.toISOString()
+        debugger
         return (
             <>
-    <div>Times shown in America/New_York clock. Current time is {this.state.curr_time}</div>
+                <div>Times shown in America/New_York clock. Current time is {this.state.curr_time}</div>
+                
                 <Calendar 
-                    onChanged={this.onChange}
+                    onClickDay={this.onChange}
                     value={this.state.date}
                 />
+                <div className="available-times-tables">
+                    <ul>
+                        <li>9:00 am</li>
+                        <li>10:00 am</li>
+                        <li>11:00 am</li>
+                        <li>12:00 am</li>
+                    </ul>
+                    <ul>
+                        <li>1:00 pm</li>
+                        <li>2:00 pm</li>
+                        <li>3:00 pm</li>
+                        <li>4:00 pm</li>
+                    </ul>
+                    <ul>
+                        <li>5:00 pm</li>
+                        <li>6:00 pm</li>
+                        <li>7:00 pm</li>
+                        <li>8:00 pm</li>
+                    </ul>
+                </div>
             </>
         )
     }

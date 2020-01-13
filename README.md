@@ -24,3 +24,8 @@ To Do:
     - Not responsive to mobile screen sizes.
     - User can switch to register form by clicking on "create account" above form
     
+
+
+
+- Build new slot form for adminstrators.
+- patients can load slots correctly based on their timezone.
