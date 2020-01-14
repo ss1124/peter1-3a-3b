@@ -1,7 +1,9 @@
 class Meeting < ApplicationRecord
-    validates :user_id, :begin_time, :end_time, presence: true
+    validates :doctor_id, :begin_time, :end_time, presence: true
 
-    belongs_to :user,
-    foreign_key: :user_id,
+    belongs_to :doctor,
+    foreign_key: :doctor_id,
     class_name: :User  
+
+    
 end

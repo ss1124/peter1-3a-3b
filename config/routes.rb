@@ -6,4 +6,6 @@ Rails.application.routes.draw do
     resource :session, only: [:create, :destroy] 
     resources :meetings, only: [:index, :update,  :show, :create, :destroy]
   end
+  debugger
+  get 'api/meetings/show_slots_of_doctor/:id', to: 'api/meetings#show_slots_of_doctor'
 end

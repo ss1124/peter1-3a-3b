@@ -1,18 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { createMeeting } from '../../actions/meeting_actions';
+import { updateMeeting, fetchMeetings, showSlotsOfDoctor } from '../../actions/meeting_actions';
 import Schedule from './schedule';
 
 
 const mapStateToProps = (state, ownProps) => {
     return ({
-
+        meetings: state.entities.meetings,
     })
 }
 
 const mapDispatchToProps = (dispatch) => {
     return ({
-        createMeeting: (meeting) => dispatch(createMeeting(meeting))
+        updateMeeting: (meeting) => dispatch(updateMeeting(meeting)),
+        fetchMeetings: () => dispatch(fetchMeetings()),
+        showSlotsOfDoctor: (id) => dispatch(showSlotsOfDoctor(id)),
     })
 }
 

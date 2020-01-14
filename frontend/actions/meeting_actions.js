@@ -27,8 +27,8 @@ const removeMeeting = (id) => {
 }
 
 export const fetchMeetings = () => dispatch => {
-  return API_Meeting_Util.fetchMeetings().then(meeting => {
-    return dispatch(receiveMeetings(meeting));
+  return API_Meeting_Util.fetchMeetings().then(meetings => {
+    return dispatch(receiveMeetings(meetings));
   })
 }
 
@@ -55,5 +55,12 @@ export const updateMeeting = (meeting) => dispatch => {
 export const deleteMeeting = (id) => dispatch => { 
   return API_Meeting_Util.deleteMeeting(id).then(meeting => {
     return dispatch(removeMeeting(meeting.id))
+  })
+}
+
+export const showSlotsOfDoctor = (id) => dispatch => {
+  debugger
+  return API_Meeting_Util.showSlotsOfDoctor(id).then(meetings => {
+    return dispatch(receiveMeetings(meetings))
   })
 }

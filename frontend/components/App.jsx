@@ -7,7 +7,7 @@ import SignUpFormContainer from './session_form/signup_form_container';
 import CareSelectForm from './care_select/care_select_form';
 import ScheduleContainer from './schedule/schedule_container';
 import IndexContainer from './index/index_container';
-import DocAvailabilityForm from './doc_availability_form/doc_availability_form';
+import DocAvailabilityFormContainer from './doc_availability_form/doc_availability_form_container';
 import {
   Route,
   Redirect,
@@ -27,7 +27,7 @@ const App = () => (
       {/* both logged in and loggout out users can access*/}
       <ProtectedRoute path="/care_select" component={CareSelectForm} />
       <ProtectedRoute path="/schedule" component={ScheduleContainer} />
-      <Route path="/doc_availability_form" component={DocAvailabilityForm} />
+      <Route path="/doc_availability_form" component={DocAvailabilityFormContainer} />
       <ProtectedRoute exact path="" component={IndexContainer}/>
 
     </Switch>

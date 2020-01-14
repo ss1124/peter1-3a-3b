@@ -1,1 +1,1 @@
-json.extract! meeting, :id, :begin_time, :end_time, :user_id
+json.extract! meeting, :id, :begin_time, :end_time, :doctor_id

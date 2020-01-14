@@ -4,6 +4,14 @@ class Api::MeetingsController < ApplicationController
     render "api/meetings/index"
   end
 
+  def show_slots_of_doctor
+    debugger
+    @meetings = User.find(params[:id]).meetings
+    debugger
+    render "api/meetings/index"
+  end
+
+
   def create
     debugger
     @meeting = Meeting.new(meeting_params)
@@ -25,7 +33,9 @@ class Api::MeetingsController < ApplicationController
   end
 
   def show
+    debugger
     @meeting = Meeting.find_by(id: params[:id])
+    debugger
     render "api/meetings/show"
   end
 
@@ -41,7 +51,7 @@ class Api::MeetingsController < ApplicationController
 
 private
   def meeting_params
-    params.require(:meeting).permit(:begin_time, :end_time, :user_id)
+    params.require(:meeting).permit(:begin_time, :end_time, :doctor_id)
   end
 
 end

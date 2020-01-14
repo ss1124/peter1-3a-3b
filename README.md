@@ -27,5 +27,9 @@ To Do:
 
 
 
-- Build new slot form for adminstrators.
-- patients can load slots correctly based on their timezone.
+
+1) make new table for actual meetings when doctors/patients need to talk. It has patientid, doctorid, starttime
+2) the doctor can create slots using doc_availability_form component, which the patients can match with. 
+- doctors log what times they are available, by half hour slots.
+- the start and end times of each of these slot entered are converted to UTC (using moment UTC), then saved
+- When a user fetches these time, the UTC times are converted to here current timezone (using moment UTC), and she sees everything perfectly.

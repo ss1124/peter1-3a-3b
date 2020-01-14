@@ -7,7 +7,7 @@ class User < ApplicationRecord
   after_initialize :ensure_session_token
 
   has_many :meetings,
-  foreign_key: :user_id,
+  foreign_key: :patient_id,
   class_name: :Meeting
 
   def self.find_by_credentials(email, password)
