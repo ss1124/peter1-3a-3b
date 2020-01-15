@@ -44,3 +44,4 @@ export const showSlotsOfDoctor = (id) => {
     url: `api/meetings/show_slots_of_doctor/${id}`,
   })
 }
+

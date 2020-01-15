@@ -3,7 +3,6 @@ import {Link, Redirect} from 'react-router-dom';
 import Calendar from 'react-calendar';
 
 var moment = require('moment');
-moment().format();
 
 class Schedule extends React.Component {
     constructor(props) {
@@ -11,11 +10,13 @@ class Schedule extends React.Component {
         this.state = {
             user_id: '',
             curr_time: null,
-            date: null
+            date: null,
+            // meetings: [],
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
         this.getTime = this.getTime.bind(this);
+        this.handleMeetingButton = this.handleMeetingButton.bind(this);
     }
 
     componentDidMount() {
@@ -25,7 +26,12 @@ class Schedule extends React.Component {
         //         curr_time: this.getTime()
         //     })
         // },1000)
-        this.props.showSlotsOfDoctor(1);
+        debugger
+        this.props.showSlotsOfDoctor(1)
+        //  .then((data) => {
+        //     debugger
+        //     this.setState({meetings: data})
+        // });
     }
 
     getTime() {
@@ -52,17 +58,38 @@ class Schedule extends React.Component {
     }
     //<div>Date Chosen: {this.state.date.getUTCDay()} </div>
 
+    handleMeetingButton(e) {
+        // e.preventDefault();
+        // debugger
+        // let currentUserId = this.props.currentUser.id;
+        // debugger
+        // let meetingId = e.target.value;
+        // debugger
+        // let updatedMeeting = Object.assign(this.props.meetings[meetingId], {patient_id: currentUserId});
+        // debugger
+        // this.props.updateMeeting(updatedMeeting)
+        let meetingId = e.target.value;
+        this.props.history.push(`/meeting_confirm/${meetingId}`);
+    }
+
     render() {
         // momentObject.toString()
         // momentObject.format()
         // momentObject.toISOString()
         debugger
-        if (!this.props.meetings) {
-            debugger
-            return null;
-        } 
+        let meetings = this.props.meetings
+        Object.keys(meetings).forEach(function(key,index) {
+                let zone = "America/Los_Angeles";
+                let begin_time = meetings[key].begin_time;
+                let _moment = moment.tz(begin_time, zone);
+                meetings[key].formatted = _moment.format("MMMM Do YYYY, h:mm:ss a");
+                meetings[key].date = _moment.date();
+                meetings[key].hour = _moment.hour();
+                meetings[key].minute = _moment.minute();
+        });
         debugger
-        let meetings = Object.values(this.props.meetings);
+        let meetings_array = Object.values(meetings);
+        debugger
         return (
             <>
                 <div>Times shown in America/New_York clock. Current time is {this.state.curr_time}</div>
@@ -73,8 +100,10 @@ class Schedule extends React.Component {
                 />
                 <div className="available-times-tables">
                     <ul>
-                    {meetings.slice(0).reverse().map((project, key) => {
-                        return <div key={key}>This is a meeting entry</div> 
+                    {meetings_array.slice(0).map((meeting, key) => {
+                    return <div key={key}>
+                                <button value={meeting.id} onClick={this.handleMeetingButton}>{meeting.formatted}</button>
+                            </div> 
                     })}
                     </ul>
                 </div>

@@ -1,22 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { updateMeeting, fetchMeetings, showSlotsOfDoctor } from '../../actions/meeting_actions';
-import Schedule from './schedule';
+import { updateMeeting, fetchMeeting } from '../../actions/meeting_actions';
+import MeetingConfirm from './meeting_confirm';
 
 
 const mapStateToProps = (state, ownProps) => {
     return ({
         currentUser: state.entities.users[state.session.id],
         meetings: state.entities.meetings,
+        meetingId: ownProps.match.params.meetingId,
     })
 }
 
 const mapDispatchToProps = (dispatch) => {
     return ({
         updateMeeting: (meeting) => dispatch(updateMeeting(meeting)),
-        fetchMeetings: () => dispatch(fetchMeetings()),
-        showSlotsOfDoctor: (id) => dispatch(showSlotsOfDoctor(id)),
+        fetchMeeting: (id) => dispatch(fetchMeeting(id)),
     })
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Schedule);
+export default connect(mapStateToProps, mapDispatchToProps)(MeetingConfirm);

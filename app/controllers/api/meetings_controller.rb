@@ -5,25 +5,17 @@ class Api::MeetingsController < ApplicationController
   end
 
   def show_slots_of_doctor
-    debugger
-    @meetings = User.find(params[:id]).meetings
-    debugger
+    @meetings = User.find(params[:id]).slots
     render "api/meetings/index"
   end
 
-
   def create
-    debugger
     @meeting = Meeting.new(meeting_params)
-    debugger
     if @meeting.save
-      debugger
       render "api/meetings/show"
     else
-      debugger
       render json: ["Try creating the meeting at a later time."]
     end
-    debugger
   end
 
   def destroy
@@ -41,17 +33,22 @@ class Api::MeetingsController < ApplicationController
 
 
   def update
+    debugger
     @meeting = Meeting.find(params[:id]) 
+    debugger
     if @meeting.update_attributes(meeting_params)
+      debugger
       render "api/meetings/show"
     else
+      debugger
       render json: ["unable to update meeting"]
     end
+    debugger
   end
 
 private
   def meeting_params
-    params.require(:meeting).permit(:begin_time, :end_time, :doctor_id)
+    params.require(:meeting).permit(:begin_time, :end_time, :doctor_id, :patient_id)
   end
 
 end

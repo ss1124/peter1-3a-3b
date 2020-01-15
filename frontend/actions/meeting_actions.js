@@ -64,3 +64,4 @@ export const showSlotsOfDoctor = (id) => dispatch => {
     return dispatch(receiveMeetings(meetings))
   })
 }
+
