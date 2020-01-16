@@ -11,12 +11,19 @@ class Schedule extends React.Component {
             user_id: '',
             curr_time: null,
             date: null,
-            // meetings: [],
+            calendar_val: null,
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
         this.getTime = this.getTime.bind(this);
         this.handleMeetingButton = this.handleMeetingButton.bind(this);
+        this.handleClickMonth = this.handleClickMonth.bind(this);
+    }
+
+    handleClickMonth({ activeStartDate, view }) {
+        debugger
+        alert('Changed view to: ', activeStartDate, view)
+        this.props.showSlotsOfDoctor(1);
     }
 
     componentDidMount() {
@@ -49,7 +56,8 @@ class Schedule extends React.Component {
     }
 
     onChange(date) {
-        this.setState({ date })
+        debugger
+        this.setState({ date: date.getDate() })
     }
 
     handleSubmit(e) {
@@ -77,37 +85,57 @@ class Schedule extends React.Component {
         // momentObject.format()
         // momentObject.toISOString()
         debugger
-        let meetings = this.props.meetings
-        Object.keys(meetings).forEach(function(key,index) {
-                let zone = "America/Los_Angeles";
-                let begin_time = meetings[key].begin_time;
-                let _moment = moment.tz(begin_time, zone);
-                meetings[key].formatted = _moment.format("MMMM Do YYYY, h:mm:ss a");
-                meetings[key].date = _moment.date();
-                meetings[key].hour = _moment.hour();
-                meetings[key].minute = _moment.minute();
-        });
+        if (!("available_date" in this.props.meetings)) {
+            return null;
+        }
+        let meetings = this.props.meetings;
         debugger
         let meetings_array = Object.values(meetings);
         debugger
         return (
-            <>
+            <div id="schedule">
                 <div>Times shown in America/New_York clock. Current time is {this.state.curr_time}</div>
                 
                 <Calendar 
                     onClickDay={this.onChange}
-                    value={this.state.date}
+                    value={this.state.calendar_val}
+                    minDate={new Date()}
+                    // minDetail="month"
+                    prev2Label={null}
+                    next2Label={null}
+                    minDetail="month"
+                    tileClassName={({ activeStartDate, date, view }) => {
+                        // [{year: ..., month: ..., date: ...}, ...]
+                        //&& this.props.meetings.available_date.includes(date.getDate()) ? "available-date" : null
+                        debugger
+                        let date_moment = moment(date);
+                        let year_month_date = date_moment.year() + "-" + date_moment.month() + "-" + date_moment.date();
+                        if (view !== 'month') {
+                            return
+                        }
+                        if (year_month_date in this.props.meetings.available_date) {
+                            return "available-date"
+                        } 
+                    }}
                 />
                 <div className="available-times-tables">
                     <ul>
                     {meetings_array.slice(0).map((meeting, key) => {
-                    return <div key={key}>
-                                <button value={meeting.id} onClick={this.handleMeetingButton}>{meeting.formatted}</button>
-                            </div> 
+                        if (meeting.date != this.state.date) {
+                            return
+                        }
+                        if (!meeting.patient_id) {
+                            return <div key={key}>
+                                    <button className="slot-unselected" value={meeting.id} onClick={this.handleMeetingButton}>{meeting.formatted}</button>
+                                </div> 
+                        }
+                        return <div key={key}>
+                                    <button className="slot-selected" value={meeting.id} onClick={this.handleMeetingButton}>{meeting.formatted}</button>
+                                </div> 
                     })}
                     </ul>
                 </div>
-            </>
+            </div>
         )
     }
 }

@@ -1023,6 +1023,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1043,6 +1044,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var MeetingIndex =
 /*#__PURE__*/
 function (_React$Component) {
@@ -1057,7 +1059,9 @@ function (_React$Component) {
   _createClass(MeetingIndex, [{
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "You are at the meeting index.");
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "You are at the meeting index.", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        to: "/schedule"
+      }, "Back To Schedule"));
     }
   }]);
 
@@ -1181,17 +1185,27 @@ function (_React$Component) {
     _this.state = {
       user_id: '',
       curr_time: null,
-      date: null // meetings: [],
-
+      date: null,
+      calendar_val: null
     };
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     _this.onChange = _this.onChange.bind(_assertThisInitialized(_this));
     _this.getTime = _this.getTime.bind(_assertThisInitialized(_this));
     _this.handleMeetingButton = _this.handleMeetingButton.bind(_assertThisInitialized(_this));
+    _this.handleClickMonth = _this.handleClickMonth.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(Schedule, [{
+    key: "handleClickMonth",
+    value: function handleClickMonth(_ref) {
+      var activeStartDate = _ref.activeStartDate,
+          view = _ref.view;
+      debugger;
+      alert('Changed view to: ', activeStartDate, view);
+      this.props.showSlotsOfDoctor(1);
+    }
+  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
       // setInterval(() => {
@@ -1229,8 +1243,9 @@ function (_React$Component) {
   }, {
     key: "onChange",
     value: function onChange(date) {
+      debugger;
       this.setState({
-        date: date
+        date: date.getDate()
       });
     }
   }, {
@@ -1264,30 +1279,64 @@ function (_React$Component) {
       // momentObject.format()
       // momentObject.toISOString()
       debugger;
+
+      if (!("available_date" in this.props.meetings)) {
+        return null;
+      }
+
       var meetings = this.props.meetings;
-      Object.keys(meetings).forEach(function (key, index) {
-        var zone = "America/Los_Angeles";
-        var begin_time = meetings[key].begin_time;
-
-        var _moment = moment.tz(begin_time, zone);
-
-        meetings[key].formatted = _moment.format("MMMM Do YYYY, h:mm:ss a");
-        meetings[key].date = _moment.date();
-        meetings[key].hour = _moment.hour();
-        meetings[key].minute = _moment.minute();
-      });
       debugger;
       var meetings_array = Object.values(meetings);
       debugger;
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Times shown in America/New_York clock. Current time is ", this.state.curr_time), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_calendar__WEBPACK_IMPORTED_MODULE_2___default.a, {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "schedule"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Times shown in America/New_York clock. Current time is ", this.state.curr_time), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_calendar__WEBPACK_IMPORTED_MODULE_2___default.a, {
         onClickDay: this.onChange,
-        value: this.state.date
+        value: this.state.calendar_val,
+        minDate: new Date() // minDetail="month"
+        ,
+        prev2Label: null,
+        next2Label: null,
+        minDetail: "month",
+        tileClassName: function tileClassName(_ref2) {
+          var activeStartDate = _ref2.activeStartDate,
+              date = _ref2.date,
+              view = _ref2.view;
+          // [{year: ..., month: ..., date: ...}, ...]
+          //&& this.props.meetings.available_date.includes(date.getDate()) ? "available-date" : null
+          debugger;
+          var date_moment = moment(date);
+          var year_month_date = date_moment.year() + "-" + date_moment.month() + "-" + date_moment.date();
+
+          if (view !== 'month') {
+            return;
+          }
+
+          if (year_month_date in _this2.props.meetings.available_date) {
+            return "available-date";
+          }
+        }
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "available-times-tables"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, meetings_array.slice(0).map(function (meeting, key) {
+        if (meeting.date != _this2.state.date) {
+          return;
+        }
+
+        if (!meeting.patient_id) {
+          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            key: key
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+            className: "slot-unselected",
+            value: meeting.id,
+            onClick: _this2.handleMeetingButton
+          }, meeting.formatted));
+        }
+
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           key: key
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          className: "slot-selected",
           value: meeting.id,
           onClick: _this2.handleMeetingButton
         }, meeting.formatted));
@@ -1877,7 +1926,28 @@ var meetingsReducer = function meetingsReducer() {
 
     case _actions_meeting_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_ALL_MEETINGS"]:
       debugger;
-      var newState = Object.assign({}, state, action.meetings);
+      var meetings = action.meetings;
+      meetings.available_date = {};
+      debugger;
+      Object.keys(meetings).forEach(function (key, index) {
+        var zone = "America/Los_Angeles";
+        var begin_time = meetings[key].begin_time;
+
+        var _moment = moment.tz(begin_time, zone);
+
+        meetings[key].formatted = _moment.format("MMMM Do YYYY, h:mm:ss a");
+        meetings[key].date = _moment.date();
+        meetings[key].hour = _moment.hour();
+        meetings[key].minute = _moment.minute();
+        meetings[key].month = _moment.month(); //january is represented as 0
+
+        meetings[key].year = _moment.year();
+        debugger;
+        var year_month_date = meetings[key].year + '-' + meetings[key].month + '-' + meetings[key].date;
+        meetings.available_date[year_month_date] = true;
+      });
+      debugger;
+      var newState = Object.assign({}, state, meetings);
       debugger;
       return newState;
 
@@ -2344,7 +2414,7 @@ module.exports = _inheritsLoose;
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, ".react-calendar {\n  width: 350px;\n  max-width: 100%;\n  background: white;\n  border: 1px solid #a0a096;\n  font-family: Arial, Helvetica, sans-serif;\n  line-height: 1.125em;\n}\n.react-calendar,\n.react-calendar *,\n.react-calendar *:before,\n.react-calendar *:after {\n  -moz-box-sizing: border-box;\n  -webkit-box-sizing: border-box;\n  box-sizing: border-box;\n}\n.react-calendar button {\n  margin: 0;\n  border: 0;\n  outline: none;\n}\n.react-calendar button:enabled:hover {\n  cursor: pointer;\n}\n.react-calendar__navigation {\n  height: 44px;\n  margin-bottom: 1em;\n}\n.react-calendar__navigation button {\n  min-width: 44px;\n  background: none;\n}\n.react-calendar__navigation button:enabled:hover,\n.react-calendar__navigation button:enabled:focus {\n  background-color: #e6e6e6;\n}\n.react-calendar__navigation button[disabled] {\n  background-color: #f0f0f0;\n}\n.react-calendar__month-view__weekdays {\n  text-align: center;\n  text-transform: uppercase;\n  font-weight: bold;\n  font-size: 0.75em;\n}\n.react-calendar__month-view__weekdays__weekday {\n  padding: 0.5em;\n}\n.react-calendar__month-view__weekNumbers {\n  font-weight: bold;\n}\n.react-calendar__month-view__weekNumbers .react-calendar__tile {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-size: 0.75em;\n  padding: calc(0.75em / 0.75) calc(0.5em / 0.75);\n}\n.react-calendar__month-view__days__day--weekend {\n  color: #d10000;\n}\n.react-calendar__month-view__days__day--neighboringMonth {\n  color: #757575;\n}\n.react-calendar__year-view .react-calendar__tile,\n.react-calendar__decade-view .react-calendar__tile,\n.react-calendar__century-view .react-calendar__tile {\n  padding: 2em 0.5em;\n}\n.react-calendar__tile {\n  max-width: 100%;\n  text-align: center;\n  padding: 0.75em 0.5em;\n  background: none;\n}\n.react-calendar__tile:disabled {\n  background-color: #f0f0f0;\n}\n.react-calendar__tile:enabled:hover,\n.react-calendar__tile:enabled:focus {\n  background-color: #e6e6e6;\n}\n.react-calendar__tile--hasActive {\n  background: #76baff;\n}\n.react-calendar__tile--hasActive:enabled:hover,\n.react-calendar__tile--hasActive:enabled:focus {\n  background: #a9d4ff;\n}\n.react-calendar__tile--active {\n  background: #006edc;\n  color: white;\n}\n.react-calendar__tile--active:enabled:hover,\n.react-calendar__tile--active:enabled:focus {\n  background: #1087ff;\n}\n.react-calendar--selectRange .react-calendar__tile--hover {\n  background-color: #e6e6e6;\n}\n", ""]);
+exports.push([module.i, ".react-calendar {\n  width: 80%;\n  max-width: 100%;\n  background: white;\n  border: 1px solid #a0a096;\n  font-family: Arial, Helvetica, sans-serif;\n  line-height: 1.125em;\n}\n\n.available-date {\n  color: #ed474c !important;\n}\n\n.react-calendar,\n.react-calendar *,\n.react-calendar *:before,\n.react-calendar *:after {\n  -moz-box-sizing: border-box;\n  -webkit-box-sizing: border-box;\n  box-sizing: border-box;\n}\n.react-calendar button {\n  margin: 0;\n  border: 0;\n  outline: none;\n}\n.react-calendar button:enabled:hover {\n  cursor: pointer;\n}\n.react-calendar__navigation {\n  height: 44px;\n  margin-bottom: 1em;\n}\n.react-calendar__navigation button {\n  min-width: 44px;\n  background: none;\n}\n.react-calendar__navigation button:enabled:hover,\n.react-calendar__navigation button:enabled:focus {\n  background-color: #e6e6e6;\n}\n.react-calendar__navigation button[disabled] {\n  background-color: #f0f0f0;\n}\n.react-calendar__month-view__weekdays {\n  text-align: center;\n  text-transform: uppercase;\n  font-weight: bold;\n  font-size: 0.75em;\n}\n.react-calendar__month-view__weekdays__weekday {\n  padding: 0.5em;\n}\n.react-calendar__month-view__weekNumbers {\n  font-weight: bold;\n}\n.react-calendar__month-view__weekNumbers .react-calendar__tile {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-size: 0.75em;\n  padding: calc(0.75em / 0.75) calc(0.5em / 0.75);\n}\n\n.react-calendar__year-view .react-calendar__tile,\n.react-calendar__decade-view .react-calendar__tile,\n.react-calendar__century-view .react-calendar__tile {\n  padding: 2em 0.5em;\n}\n.react-calendar__tile {\n  max-width: 100%;\n  text-align: center;\n  padding: 0.75em 0.5em;\n  background: none;\n  color: #acacac;\n}\n.react-calendar__tile:disabled {\n  background-color: #f0f0f0;\n}\n.react-calendar__tile:enabled:hover,\n.react-calendar__tile:enabled:focus {\n  background-color: #e6e6e6;\n}\n.react-calendar__tile--hasActive {\n  background: #76baff;\n}\n.react-calendar__tile--hasActive:enabled:hover,\n.react-calendar__tile--hasActive:enabled:focus {\n  background: #a9d4ff;\n}\n.react-calendar__tile--active {\n  background: #006edc;\n  color: white;\n}\n.react-calendar__tile--active:enabled:hover,\n.react-calendar__tile--active:enabled:focus {\n  background: #1087ff;\n}\n.react-calendar--selectRange .react-calendar__tile--hover {\n  background-color: #e6e6e6;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
