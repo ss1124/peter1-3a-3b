@@ -8,14 +8,15 @@ const mapStateToProps = (state, ownProps) => {
     return ({
         currentUser: state.entities.users[state.session.id],
         meetings: state.entities.meetings,
+        time_zone: state.entities.meetings.time_zone,
     })
 }
 
 const mapDispatchToProps = (dispatch) => {
     return ({
         updateMeeting: (meeting) => dispatch(updateMeeting(meeting)),
-        fetchMeetings: () => dispatch(fetchMeetings()),
-        showSlotsOfDoctor: (id) => dispatch(showSlotsOfDoctor(id)),
+        fetchMeetings: (time_zone) => dispatch(fetchMeetings(time_zone)),
+        showSlotsOfDoctor: (id, time_zone) => dispatch(showSlotsOfDoctor(id, time_zone)),
     })
 }
 

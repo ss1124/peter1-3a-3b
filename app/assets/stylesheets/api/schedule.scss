@@ -1,8 +1,51 @@
 #schedule {
-    .slot-selected {
-        background-color: gray;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .schedule-calendar {
+        margin-top: 10vh;
+        width: 70%;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 4px rgba(0,0,0,0.1), 0 5px 20px rgba(0,0,0,0.05);
+        border: none;
     }
-    .slot-unselected {
-        background-color: red;
+
+    .available-times-tables {
+        width: 70%;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 4px rgba(0,0,0,0.1), 0 5px 20px rgba(0,0,0,0.05);
+        margin-top: 2vh;
+        > .slots-ul {
+            display: flex;
+            margin: 0;
+            padding: 2vh;
+            justify-content: center;
+        }
+
+        .slot-selected, .slot-unselected {
+            cursor: pointer;
+            margin: 1vh;
+            border-radius: 0.2rem;
+            padding: 1vh;
+            border: 1px solid #e8e8e8;
+        }
+
+        .slot-unselected {
+            color: #ed474c;
+        }
+        .slot-selected {
+            color: grey;
+        }
+        > .today-date {
+            height: 5vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 2vh;
+            
+        }
     }
 }

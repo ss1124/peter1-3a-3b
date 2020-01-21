@@ -131,9 +131,9 @@ var removeMeeting = function removeMeeting(id) {
   };
 };
 
-var fetchMeetings = function fetchMeetings() {
+var fetchMeetings = function fetchMeetings(time_zone) {
   return function (dispatch) {
-    return _util_meeting_api_util__WEBPACK_IMPORTED_MODULE_0__["fetchMeetings"]().then(function (meetings) {
+    return _util_meeting_api_util__WEBPACK_IMPORTED_MODULE_0__["fetchMeetings"](time_zone).then(function (meetings) {
       return dispatch(receiveMeetings(meetings));
     });
   };
@@ -168,10 +168,10 @@ var deleteMeeting = function deleteMeeting(id) {
     });
   };
 };
-var showSlotsOfDoctor = function showSlotsOfDoctor(id) {
+var showSlotsOfDoctor = function showSlotsOfDoctor(id, time_zone) {
   return function (dispatch) {
     debugger;
-    return _util_meeting_api_util__WEBPACK_IMPORTED_MODULE_0__["showSlotsOfDoctor"](id).then(function (meetings) {
+    return _util_meeting_api_util__WEBPACK_IMPORTED_MODULE_0__["showSlotsOfDoctor"](id, time_zone).then(function (meetings) {
       return dispatch(receiveMeetings(meetings));
     });
   };
@@ -501,77 +501,66 @@ function (_React$Component) {
     _classCallCheck(this, DocAvailabilityForm);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(DocAvailabilityForm).call(this, props));
-    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     _this.state = {
-      startTime: new Date(),
-      endTime: new Date()
+      startTime: "2020-01-18 08:30",
+      endTime: "2020-01-18 09:00",
+      time_zone: "America/Los_Angelos"
     };
-    _this.changeStartTime = _this.changeStartTime.bind(_assertThisInitialized(_this));
-    _this.changeEndTime = _this.changeEndTime.bind(_assertThisInitialized(_this));
-    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
+    _this.handleStartChange = _this.handleStartChange.bind(_assertThisInitialized(_this));
+    _this.handleEndChange = _this.handleEndChange.bind(_assertThisInitialized(_this));
+    _this.handleTimeZoneChange = _this.handleTimeZoneChange.bind(_assertThisInitialized(_this));
+    _this.handleSubmit2 = _this.handleSubmit2.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(DocAvailabilityForm, [{
-    key: "changeStartTime",
-    value: function changeStartTime(date) {
+    key: "handleStartChange",
+    value: function handleStartChange(e) {
       this.setState({
-        startTime: startTime
+        startTime: e.target.value
       });
     }
   }, {
-    key: "changeEndTime",
-    value: function changeEndTime(date) {
+    key: "handleEndChange",
+    value: function handleEndChange(e) {
       this.setState({
-        endTime: endTime
+        endTime: e.target.value
       });
     }
   }, {
-    key: "handleSubmit",
-    value: function handleSubmit(time) {
-      var _this2 = this;
-
-      if (time == "8:00") {
-        return function (e) {
-          e.preventDefault();
-          debugger;
-          var newYorkMomentBegin = moment_timezone__WEBPACK_IMPORTED_MODULE_2___default.a.tz("2020-01-13 08:00", "America/New_York").format();
-          debugger;
-          var newYorkMomentEnd = moment_timezone__WEBPACK_IMPORTED_MODULE_2___default.a.tz("2020-01-13 08:30", "America/New_York").format();
-          debugger;
-
-          _this2.props.createMeeting({
-            begin_time: "".concat(newYorkMomentBegin),
-            end_time: "".concat(newYorkMomentEnd),
-            doctor_id: "1"
-          });
-        };
-      } else if (time == "8:30") {
-        return function (e) {
-          e.preventDefault();
-          debugger;
-          var newYorkMomentBegin = moment_timezone__WEBPACK_IMPORTED_MODULE_2___default.a.tz("2020-01-13 08:30", "America/New_York").format();
-          debugger;
-          var newYorkMomentEnd = moment_timezone__WEBPACK_IMPORTED_MODULE_2___default.a.tz("2020-01-13 09:00", "America/New_York").format();
-          debugger;
-
-          _this2.props.createMeeting({
-            begin_time: "".concat(newYorkMomentBegin),
-            end_time: "".concat(newYorkMomentEnd),
-            doctor_id: "1"
-          });
-        };
-      } // hard code doctor id
-
+    key: "handleTimeZoneChange",
+    value: function handleTimeZoneChange(e) {
+      this.setState({
+        time_zone: e.target.value
+      });
+    }
+  }, {
+    key: "handleSubmit2",
+    value: function handleSubmit2(e) {
+      e.preventDefault();
+      var newYorkMomentBegin = moment_timezone__WEBPACK_IMPORTED_MODULE_2___default.a.tz(this.state.startTime, this.state.time_zone).format();
+      var newYorkMomentEnd = moment_timezone__WEBPACK_IMPORTED_MODULE_2___default.a.tz(this.state.endTime, this.state.time_zone).format();
     }
   }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "start time"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.handleSubmit("8:00")
-      }, "8:00 am"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.handleSubmit("8:30")
-      }, "8:30 am"));
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "doc-avail"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "start time"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Try something like: 2020-01-17 08:30"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+        onSubmit: this.handleSubmit2
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        value: this.state.startTime,
+        onChange: this.handleStartChange
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        value: this.state.endTime,
+        onChange: this.handleEndChange
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        value: this.state.time_zone,
+        onChange: this.handleTimeZoneChange
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "Submit")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null));
     }
   }]);
 
@@ -700,7 +689,9 @@ function (_React$Component) {
         to: "/care_select"
       }, "Care Select"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         to: "/schedule"
-      }, "schedule"));
+      }, "schedule"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        to: "/doc_availability_form"
+      }, "Select Availability (for doctors)"));
     }
   }]);
 
@@ -1147,6 +1138,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var react_calendar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-calendar */ "./node_modules/react-calendar/dist/entry.js");
 /* harmony import */ var react_calendar__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_calendar__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _login_nav_bar_login_nav_bar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../login_nav_bar/login_nav_bar */ "./frontend/components/login_nav_bar/login_nav_bar.jsx");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1169,6 +1161,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 
 var Schedule =
@@ -1186,17 +1179,54 @@ function (_React$Component) {
       user_id: '',
       curr_time: null,
       date: null,
-      calendar_val: null
+      calendar_val: null,
+      formatted: null,
+      time_zone: null,
+      time_zone_form: ""
     };
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     _this.onChange = _this.onChange.bind(_assertThisInitialized(_this));
     _this.getTime = _this.getTime.bind(_assertThisInitialized(_this));
     _this.handleMeetingButton = _this.handleMeetingButton.bind(_assertThisInitialized(_this));
     _this.handleClickMonth = _this.handleClickMonth.bind(_assertThisInitialized(_this));
+    _this.timeZoneFormChange = _this.timeZoneFormChange.bind(_assertThisInitialized(_this));
+    _this.submitNewTimeZone = _this.submitNewTimeZone.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(Schedule, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      debugger;
+      this.props.showSlotsOfDoctor(1, "America+Los_Angeles").then(function () {
+        _this2.setState({
+          time_zone: _this2.props.time_zone
+        });
+      });
+    }
+  }, {
+    key: "submitNewTimeZone",
+    value: function submitNewTimeZone(e) {
+      var _this3 = this;
+
+      e.preventDefault();
+      this.props.showSlotsOfDoctor(1, this.state.time_zone_form).then(function () {
+        _this3.setState({
+          time_zone: _this3.props.time_zone
+        });
+      });
+    }
+  }, {
+    key: "timeZoneFormChange",
+    value: function timeZoneFormChange(e) {
+      this.setState({
+        time_zone_form: e.target.value
+      });
+    } // submitNewTimeZone} onChange={this.timeZoneFormChange
+
+  }, {
     key: "handleClickMonth",
     value: function handleClickMonth(_ref) {
       var activeStartDate = _ref.activeStartDate,
@@ -1204,21 +1234,6 @@ function (_React$Component) {
       debugger;
       alert('Changed view to: ', activeStartDate, view);
       this.props.showSlotsOfDoctor(1);
-    }
-  }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      // setInterval(() => {
-      //     this.setState({
-      //         // curr_time : hour + ":" + minute + " " + AM_or_PM
-      //         curr_time: this.getTime()
-      //     })
-      // },1000)
-      debugger;
-      this.props.showSlotsOfDoctor(1); //  .then((data) => {
-      //     debugger
-      //     this.setState({meetings: data})
-      // });
     }
   }, {
     key: "getTime",
@@ -1244,8 +1259,37 @@ function (_React$Component) {
     key: "onChange",
     value: function onChange(date) {
       debugger;
+      var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      var date_int = date.getDate();
+      var suffix;
+
+      if (date_int > 3 && date_int < 21) {
+        suffix = "th";
+      } else {
+        switch (date_int % 10) {
+          case 1:
+            suffix = "st";
+            break;
+
+          case 2:
+            suffix = "nd";
+            break;
+
+          case 3:
+            suffix = "rd";
+            break;
+
+          default:
+            suffix = "th";
+        }
+      }
+
+      var _formatted = days[date.getDay()] + ", " + months[date.getMonth()] + " " + date_int + suffix;
+
       this.setState({
-        date: date.getDate()
+        date: date.getDate(),
+        formatted: _formatted
       });
     }
   }, {
@@ -1258,39 +1302,33 @@ function (_React$Component) {
   }, {
     key: "handleMeetingButton",
     value: function handleMeetingButton(e) {
-      // e.preventDefault();
-      // debugger
-      // let currentUserId = this.props.currentUser.id;
-      // debugger
-      // let meetingId = e.target.value;
-      // debugger
-      // let updatedMeeting = Object.assign(this.props.meetings[meetingId], {patient_id: currentUserId});
-      // debugger
-      // this.props.updateMeeting(updatedMeeting)
       var meetingId = e.target.value;
       this.props.history.push("/meeting_confirm/".concat(meetingId));
     }
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this4 = this;
 
       // momentObject.toString()
       // momentObject.format()
       // momentObject.toISOString()
-      debugger;
-
       if (!("available_date" in this.props.meetings)) {
+        debugger;
         return null;
       }
 
       var meetings = this.props.meetings;
-      debugger;
       var meetings_array = Object.values(meetings);
+      meetings_array.pop(); //remove key-value pair with key "available-date"
+
+      meetings_array.pop(); //remove key-value pair with key "time_zone"
+
       debugger;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "schedule"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Times shown in America/New_York clock. Current time is ", this.state.curr_time), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_calendar__WEBPACK_IMPORTED_MODULE_2___default.a, {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_login_nav_bar_login_nav_bar__WEBPACK_IMPORTED_MODULE_3__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_calendar__WEBPACK_IMPORTED_MODULE_2___default.a, {
+        className: "schedule-calendar",
         onClickDay: this.onChange,
         value: this.state.calendar_val,
         minDate: new Date() // minDetail="month"
@@ -1298,49 +1336,65 @@ function (_React$Component) {
         prev2Label: null,
         next2Label: null,
         minDetail: "month",
-        tileClassName: function tileClassName(_ref2) {
+        tileDisabled: function tileDisabled(_ref2) {
           var activeStartDate = _ref2.activeStartDate,
               date = _ref2.date,
               view = _ref2.view;
           // [{year: ..., month: ..., date: ...}, ...]
           //&& this.props.meetings.available_date.includes(date.getDate()) ? "available-date" : null
-          debugger;
           var date_moment = moment(date);
           var year_month_date = date_moment.year() + "-" + date_moment.month() + "-" + date_moment.date();
 
           if (view !== 'month') {
-            return;
+            return false;
           }
 
-          if (year_month_date in _this2.props.meetings.available_date) {
-            return "available-date";
+          if (!(year_month_date in _this4.props.meetings.available_date)) {
+            return true;
           }
         }
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "available-times-tables"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, meetings_array.slice(0).map(function (meeting, key) {
-        if (meeting.date != _this2.state.date) {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "today-date"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.state.formatted)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+        className: "slots-ul"
+      }, meetings_array.slice(0).map(function (meeting, key) {
+        if (meeting.date != _this4.state.date) {
+          debugger;
           return;
         }
 
+        debugger;
+
         if (!meeting.patient_id) {
+          debugger;
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             key: key
           }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
             className: "slot-unselected",
             value: meeting.id,
-            onClick: _this2.handleMeetingButton
-          }, meeting.formatted));
+            onClick: _this4.handleMeetingButton
+          }, meeting.time_formatted));
         }
 
+        debugger;
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           key: key
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          disabled: true,
           className: "slot-selected",
           value: meeting.id,
-          onClick: _this2.handleMeetingButton
-        }, meeting.formatted));
-      }))));
+          onClick: _this4.handleMeetingButton
+        }, meeting.time_formatted));
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Times shown in ", this.state.time_zone, " clock.", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+        onSubmit: this.submitNewTimeZone
+      }, "Time Zone:", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        placeholder: "ie) America+Los_Angeles",
+        onChange: this.timeZoneFormChange,
+        value: this.state.time_zone_form,
+        type: "text"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "submit"))));
     }
   }]);
 
@@ -1384,7 +1438,8 @@ __webpack_require__.r(__webpack_exports__);
 var mapStateToProps = function mapStateToProps(state, ownProps) {
   return {
     currentUser: state.entities.users[state.session.id],
-    meetings: state.entities.meetings
+    meetings: state.entities.meetings,
+    time_zone: state.entities.meetings.time_zone
   };
 };
 
@@ -1393,11 +1448,11 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     updateMeeting: function updateMeeting(meeting) {
       return dispatch(Object(_actions_meeting_actions__WEBPACK_IMPORTED_MODULE_2__["updateMeeting"])(meeting));
     },
-    fetchMeetings: function fetchMeetings() {
-      return dispatch(Object(_actions_meeting_actions__WEBPACK_IMPORTED_MODULE_2__["fetchMeetings"])());
+    fetchMeetings: function fetchMeetings(time_zone) {
+      return dispatch(Object(_actions_meeting_actions__WEBPACK_IMPORTED_MODULE_2__["fetchMeetings"])(time_zone));
     },
-    showSlotsOfDoctor: function showSlotsOfDoctor(id) {
-      return dispatch(Object(_actions_meeting_actions__WEBPACK_IMPORTED_MODULE_2__["showSlotsOfDoctor"])(id));
+    showSlotsOfDoctor: function showSlotsOfDoctor(id, time_zone) {
+      return dispatch(Object(_actions_meeting_actions__WEBPACK_IMPORTED_MODULE_2__["showSlotsOfDoctor"])(id, time_zone));
     }
   };
 };
@@ -1796,7 +1851,9 @@ function (_React$Component) {
         to: '/signup'
       }, " Sign up "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         to: '/care_select'
-      }, "Schedule a Meeting"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null));
+      }, "Schedule a Meeting"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        to: '/doc_availability_form'
+      }, "Select Availability (for doctors)"));
     }
   }]);
 
@@ -1925,28 +1982,36 @@ var meetingsReducer = function meetingsReducer() {
       return Object.assign({}, state, _defineProperty({}, action.meeting.id, action.meeting));
 
     case _actions_meeting_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_ALL_MEETINGS"]:
-      debugger;
       var meetings = action.meetings;
-      meetings.available_date = {};
+      var available_date = {};
       debugger;
+      var time_zone = meetings.time_zone.split("+").join("/");
       Object.keys(meetings).forEach(function (key, index) {
-        var zone = "America/Los_Angeles";
+        if (key == "time_zone") {
+          return;
+        }
+
+        var zone = time_zone;
         var begin_time = meetings[key].begin_time;
 
         var _moment = moment.tz(begin_time, zone);
 
         meetings[key].formatted = _moment.format("MMMM Do YYYY, h:mm:ss a");
+        meetings[key].time_formatted = _moment.format("h:mm A");
         meetings[key].date = _moment.date();
         meetings[key].hour = _moment.hour();
         meetings[key].minute = _moment.minute();
         meetings[key].month = _moment.month(); //january is represented as 0
 
         meetings[key].year = _moment.year();
-        debugger;
         var year_month_date = meetings[key].year + '-' + meetings[key].month + '-' + meetings[key].date;
-        meetings.available_date[year_month_date] = true;
+
+        if (!("patient_id" in meetings[key]) || meetings[key].patient_id == null) {
+          available_date[year_month_date] = true;
+        }
       });
-      debugger;
+      meetings.time_zone = time_zone;
+      meetings.available_date = available_date;
       var newState = Object.assign({}, state, meetings);
       debugger;
       return newState;
@@ -2145,10 +2210,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMeeting", function() { return updateMeeting; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteMeeting", function() { return deleteMeeting; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "showSlotsOfDoctor", function() { return showSlotsOfDoctor; });
-var fetchMeetings = function fetchMeetings() {
+var fetchMeetings = function fetchMeetings(time_zone) {
   return $.ajax({
     method: "GET",
-    url: "api/meetings"
+    url: "api/meetings",
+    date: time_zone
   });
 };
 var createMeeting = function createMeeting(meeting) {
@@ -2183,11 +2249,11 @@ var deleteMeeting = function deleteMeeting(id) {
     url: "api/meetings/".concat(id)
   });
 };
-var showSlotsOfDoctor = function showSlotsOfDoctor(id) {
+var showSlotsOfDoctor = function showSlotsOfDoctor(id, time_zone) {
   debugger;
   return $.ajax({
     method: "GET",
-    url: "api/meetings/show_slots_of_doctor/".concat(id)
+    url: "api/meetings/show_slots_of_doctor/".concat(id, "/").concat(time_zone)
   });
 };
 
@@ -2414,7 +2480,7 @@ module.exports = _inheritsLoose;
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, ".react-calendar {\n  width: 80%;\n  max-width: 100%;\n  background: white;\n  border: 1px solid #a0a096;\n  font-family: Arial, Helvetica, sans-serif;\n  line-height: 1.125em;\n}\n\n.available-date {\n  color: #ed474c !important;\n}\n\n.react-calendar,\n.react-calendar *,\n.react-calendar *:before,\n.react-calendar *:after {\n  -moz-box-sizing: border-box;\n  -webkit-box-sizing: border-box;\n  box-sizing: border-box;\n}\n.react-calendar button {\n  margin: 0;\n  border: 0;\n  outline: none;\n}\n.react-calendar button:enabled:hover {\n  cursor: pointer;\n}\n.react-calendar__navigation {\n  height: 44px;\n  margin-bottom: 1em;\n}\n.react-calendar__navigation button {\n  min-width: 44px;\n  background: none;\n}\n.react-calendar__navigation button:enabled:hover,\n.react-calendar__navigation button:enabled:focus {\n  background-color: #e6e6e6;\n}\n.react-calendar__navigation button[disabled] {\n  background-color: #f0f0f0;\n}\n.react-calendar__month-view__weekdays {\n  text-align: center;\n  text-transform: uppercase;\n  font-weight: bold;\n  font-size: 0.75em;\n}\n.react-calendar__month-view__weekdays__weekday {\n  padding: 0.5em;\n}\n.react-calendar__month-view__weekNumbers {\n  font-weight: bold;\n}\n.react-calendar__month-view__weekNumbers .react-calendar__tile {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-size: 0.75em;\n  padding: calc(0.75em / 0.75) calc(0.5em / 0.75);\n}\n\n.react-calendar__year-view .react-calendar__tile,\n.react-calendar__decade-view .react-calendar__tile,\n.react-calendar__century-view .react-calendar__tile {\n  padding: 2em 0.5em;\n}\n.react-calendar__tile {\n  max-width: 100%;\n  text-align: center;\n  padding: 0.75em 0.5em;\n  background: none;\n  color: #acacac;\n}\n.react-calendar__tile:disabled {\n  background-color: #f0f0f0;\n}\n.react-calendar__tile:enabled:hover,\n.react-calendar__tile:enabled:focus {\n  background-color: #e6e6e6;\n}\n.react-calendar__tile--hasActive {\n  background: #76baff;\n}\n.react-calendar__tile--hasActive:enabled:hover,\n.react-calendar__tile--hasActive:enabled:focus {\n  background: #a9d4ff;\n}\n.react-calendar__tile--active {\n  background: #006edc;\n  color: white;\n}\n.react-calendar__tile--active:enabled:hover,\n.react-calendar__tile--active:enabled:focus {\n  background: #1087ff;\n}\n.react-calendar--selectRange .react-calendar__tile--hover {\n  background-color: #e6e6e6;\n}\n", ""]);
+exports.push([module.i, ".react-calendar {\n  width: 80%;\n  max-width: 100%;\n  background: white;\n  border: 1px solid #a0a096;\n  font-family: \"Graphik\", \"Helvetica Neue\", helvetica, \"Apple Color Emoji\", arial, sans-serif;\n  line-height: 1.125em;\n}\n\n.react-calendar,\n.react-calendar *,\n.react-calendar *:before,\n.react-calendar *:after {\n  -moz-box-sizing: border-box;\n  -webkit-box-sizing: border-box;\n  box-sizing: border-box;\n}\n.react-calendar button {\n  margin: 0;\n  border: 0;\n  outline: none;\n  font-size: 19px;\n  font-family: \"Graphik\", \"Helvetica Neue\", helvetica, \"Apple Color Emoji\", arial, sans-serif;\n}\n.react-calendar button:enabled:hover {\n  cursor: pointer;\n}\n.react-calendar__navigation {\n  height: 44px;\n  margin-bottom: 1em;\n  \n}\n.react-calendar__navigation button {\n  min-width: 44px;\n  background: none;\n  color: black;\n  font-size: 25px;\n}\n.react-calendar__navigation button:enabled:hover,\n.react-calendar__navigation button:enabled:focus {\n  /* This is when you hover/focus the > button*/\n  background-color: none;\n}\n/* This is the top bar (< January) when it is disabled */\n/* .react-calendar__navigation button[disabled] {\n  background-color: #f0f0f0;\n} */\n.react-calendar__month-view__weekdays {\n  text-align: center;\n  text-transform: uppercase;\n  font-weight: bold;\n  font-size: 0.75em;\n}\n.react-calendar__month-view__weekdays__weekday {\n  padding: 0.5em;\n}\n\n.react-calendar__month-view__weekdays__weekday abbr {\n  text-decoration: none;\n    /* font-size: 16px; */\n    font-family: \"Graphik\", \"Helvetica Neue\", helvetica, \"Apple Color Emoji\", arial, sans-serif;\n    font-weight: 200;\n    letter-spacing: 0.1em;\n}\n\n.react-calendar__month-view__weekNumbers {\n  font-weight: bold;\n}\n.react-calendar__month-view__weekNumbers .react-calendar__tile {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-size: 0.75em;\n  padding: calc(0.75em / 0.75) calc(0.5em / 0.75);\n}\n\n.react-calendar__year-view .react-calendar__tile,\n.react-calendar__decade-view .react-calendar__tile,\n.react-calendar__century-view .react-calendar__tile {\n  padding: 2em 0.5em;\n}\n.react-calendar__tile {\n  max-width: 100%;\n  text-align: center;\n  padding: 0.75em 0.5em;\n  background: none;\n  color: #ed474c;\n  border-radius: 5px;\n  font-family: \"Graphik\", \"Helvetica Neue\", helvetica, \"Apple Color Emoji\", arial, sans-serif;\n}\n.react-calendar__tile:disabled {\n  /* background-color: #f0f0f0; */\n  color: grey !important;\n}\n.react-calendar__tile:enabled:hover,\n.react-calendar__tile:enabled:focus {\n  background-color: #ed474c;\n  color: white;\n}\n.react-calendar__tile--hasActive {\n  background: #76baff;\n}\n.react-calendar__tile--hasActive:enabled:hover,\n.react-calendar__tile--hasActive:enabled:focus {\n  background: #a9d4ff;\n}\n.react-calendar__tile--active {\n  color: white !important;\n  background: #ed474c;\n  color: white;\n}\n.react-calendar__tile--active:enabled:hover,\n.react-calendar__tile--active:enabled:focus {\n  background: #ed474c;\n}\n.react-calendar--selectRange .react-calendar__tile--hover {\n  background-color: #e6e6e6;\n}\n", ""]);
 // Exports
 module.exports = exports;
 

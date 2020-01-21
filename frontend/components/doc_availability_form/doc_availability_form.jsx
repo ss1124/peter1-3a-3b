@@ -8,70 +8,51 @@ class DocAvailabilityForm extends React.Component {
   
   constructor(props) {
     super(props)
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
-        startTime: new Date(),
-        endTime: new Date,
+        startTime: "2020-01-18 08:30",
+        endTime: "2020-01-18 09:00",
+        time_zone: "America/Los_Angelos",
     }
-    this.changeStartTime = this.changeStartTime.bind(this);
-    this.changeEndTime = this.changeEndTime.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleStartChange = this.handleStartChange.bind(this);
+    this.handleEndChange = this.handleEndChange.bind(this);
+    this.handleTimeZoneChange = this.handleTimeZoneChange.bind(this);
+    this.handleSubmit2 = this.handleSubmit2.bind(this);
   }
 
-  changeStartTime(date) {
-      this.setState({startTime})
+  handleStartChange(e) {
+      this.setState({startTime: e.target.value})
   }
 
-  changeEndTime(date) {
-      this.setState({endTime})
+  handleEndChange(e) {
+      this.setState({endTime: e.target.value})
   }
 
-  handleSubmit(time) {
-    if (time == "8:00") {
-      return (e) => {
-        e.preventDefault();
-        debugger
-        let newYorkMomentBegin = moment.tz("2020-01-13 08:00", "America/New_York").format();
-        debugger
-        let newYorkMomentEnd = moment.tz("2020-01-13 08:30", "America/New_York").format();
-        debugger
-        this.props.createMeeting({begin_time: `${newYorkMomentBegin}`, end_time: `${newYorkMomentEnd}`, doctor_id: `1`})
-      }
-    } else if (time == "8:30") {
-      return (e) => {
-        e.preventDefault();
-        debugger
-        let newYorkMomentBegin = moment.tz("2020-01-13 08:30", "America/New_York").format();
-        debugger
-        let newYorkMomentEnd = moment.tz("2020-01-13 09:00", "America/New_York").format();
-        debugger
-        this.props.createMeeting({begin_time: `${newYorkMomentBegin}`, end_time: `${newYorkMomentEnd}`, doctor_id: `1`})
-      }
-      
-    }
-    
-    // hard code doctor id
-    
+  handleTimeZoneChange(e) {
+    this.setState({time_zone: e.target.value})
   }
+
+  handleSubmit2(e) {
+    e.preventDefault();
+    let newYorkMomentBegin = moment.tz(this.state.startTime, this.state.time_zone).format();
+    let newYorkMomentEnd = moment.tz(this.state.endTime, this.state.time_zone).format();
+  }
+
 
   render() {
     return (
-        <div>
+        <div className="doc-avail">
             <p>start time</p>
-            
-            {/* <DateTimePicker
-                onChange={this.onChange}
-                value={this.state.startTime}
-            /> */}
-            {/* <p>end time</p>
-            <DateTimePicker
-                onChange={this.onChange}
-                value={this.state.endTime}
-            /> */}
+            <p>Try something like: 2020-01-17 08:30</p>
+            <form onSubmit={this.handleSubmit2}>
+              <input type="text" value={this.state.startTime} onChange={this.handleStartChange}/>
+              <input type="text" value={this.state.endTime} onChange={this.handleEndChange}/>
+              <input type="text" value={this.state.time_zone} onChange={this.handleTimeZoneChange}/>
+              <button>Submit</button>
+            </form>
             <br/>
-            <button onClick={this.handleSubmit("8:00")}>8:00 am</button>
+            {/* <button onClick={this.handleSubmit("8:00")}>8:00 am</button> */}
             <br/>
-            <button onClick={this.handleSubmit("8:30")}>8:30 am</button>
+            {/* <button onClick={this.handleSubmit("8:30")}>8:30 am</button> */}
         </div>
     )
   }

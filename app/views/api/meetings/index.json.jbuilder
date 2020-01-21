@@ -3,4 +3,5 @@
     json.partial! 'meeting', meeting: meeting
   end
 end
+json.time_zone @time_zone
 

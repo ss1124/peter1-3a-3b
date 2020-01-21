@@ -15,6 +15,7 @@ class Splash extends React.Component {
         <br/>
         <Link to={'/care_select'}>Schedule a Meeting</Link>
         <br/>
+        <Link to={'/doc_availability_form'}>Select Availability (for doctors)</Link>
       </div>
     )
   }

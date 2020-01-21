@@ -1,7 +1,8 @@
-export const fetchMeetings = () => {
+export const fetchMeetings = (time_zone) => {
   return $.ajax({
     method: "GET",
-    url: "api/meetings"
+    url: "api/meetings",
+    date: time_zone
   })
 }
 
@@ -37,11 +38,11 @@ export const deleteMeeting = (id) => {
   })
 }
 
-export const showSlotsOfDoctor = (id) => {
+export const showSlotsOfDoctor = (id, time_zone) => {
   debugger
   return $.ajax({
     method: "GET",
-    url: `api/meetings/show_slots_of_doctor/${id}`,
+    url: `api/meetings/show_slots_of_doctor/${id}/${time_zone}`,
   })
 }
 

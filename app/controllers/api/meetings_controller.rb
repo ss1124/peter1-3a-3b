@@ -6,6 +6,7 @@ class Api::MeetingsController < ApplicationController
 
   def show_slots_of_doctor
     @meetings = User.find(params[:id]).slots
+    @time_zone = params[:time_zone]
     render "api/meetings/index"
   end
 
@@ -25,30 +26,23 @@ class Api::MeetingsController < ApplicationController
   end
 
   def show
-    debugger
     @meeting = Meeting.find_by(id: params[:id])
-    debugger
     render "api/meetings/show"
   end
 
 
   def update
-    debugger
     @meeting = Meeting.find(params[:id]) 
-    debugger
     if @meeting.update_attributes(meeting_params)
-      debugger
       render "api/meetings/show"
     else
-      debugger
       render json: ["unable to update meeting"]
     end
-    debugger
   end
 
 private
   def meeting_params
-    params.require(:meeting).permit(:begin_time, :end_time, :doctor_id, :patient_id)
+    params.require(:meeting).permit(:begin_time, :end_time, :doctor_id, :patient_id, :time_zone)
   end
 
 end

@@ -26,8 +26,9 @@ const removeMeeting = (id) => {
   })
 }
 
-export const fetchMeetings = () => dispatch => {
-  return API_Meeting_Util.fetchMeetings().then(meetings => {
+
+export const fetchMeetings = (time_zone) => dispatch => {
+  return API_Meeting_Util.fetchMeetings(time_zone).then(meetings => {
     return dispatch(receiveMeetings(meetings));
   })
 }
@@ -58,9 +59,9 @@ export const deleteMeeting = (id) => dispatch => {
   })
 }
 
-export const showSlotsOfDoctor = (id) => dispatch => {
+export const showSlotsOfDoctor = (id, time_zone) => dispatch => {
   debugger
-  return API_Meeting_Util.showSlotsOfDoctor(id).then(meetings => {
+  return API_Meeting_Util.showSlotsOfDoctor(id, time_zone).then(meetings => {
     return dispatch(receiveMeetings(meetings))
   })
 }

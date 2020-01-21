@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link, Redirect} from 'react-router-dom';
 import Calendar from 'react-calendar';
-
+import LoginNavBar from '../login_nav_bar/login_nav_bar';
 var moment = require('moment');
 
 class Schedule extends React.Component {
@@ -12,33 +12,43 @@ class Schedule extends React.Component {
             curr_time: null,
             date: null,
             calendar_val: null,
+            formatted: null,
+            time_zone: null,
+            time_zone_form: "",
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
         this.getTime = this.getTime.bind(this);
         this.handleMeetingButton = this.handleMeetingButton.bind(this);
         this.handleClickMonth = this.handleClickMonth.bind(this);
+        this.timeZoneFormChange = this.timeZoneFormChange.bind(this);
+        this.submitNewTimeZone = this.submitNewTimeZone.bind(this);
     }
+
+    componentDidMount() {
+        debugger
+        this.props.showSlotsOfDoctor(1, "America+Los_Angeles")
+            .then(() => {this.setState({time_zone: this.props.time_zone})})
+    }
+
+    submitNewTimeZone(e) {
+        e.preventDefault();
+        this.props.showSlotsOfDoctor(1, this.state.time_zone_form)
+            .then(() => {this.setState({time_zone: this.props.time_zone})})
+    }
+
+    timeZoneFormChange(e) {
+        this.setState({time_zone_form: e.target.value})
+    }
+
+
+
+    // submitNewTimeZone} onChange={this.timeZoneFormChange
 
     handleClickMonth({ activeStartDate, view }) {
         debugger
         alert('Changed view to: ', activeStartDate, view)
         this.props.showSlotsOfDoctor(1);
-    }
-
-    componentDidMount() {
-        // setInterval(() => {
-        //     this.setState({
-        //         // curr_time : hour + ":" + minute + " " + AM_or_PM
-        //         curr_time: this.getTime()
-        //     })
-        // },1000)
-        debugger
-        this.props.showSlotsOfDoctor(1)
-        //  .then((data) => {
-        //     debugger
-        //     this.setState({meetings: data})
-        // });
     }
 
     getTime() {
@@ -57,7 +67,29 @@ class Schedule extends React.Component {
 
     onChange(date) {
         debugger
-        this.setState({ date: date.getDate() })
+        let days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        let months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        let date_int = date.getDate();
+        let suffix;
+        if (date_int > 3 && date_int < 21) {
+            suffix = "th";
+        } else {
+            switch (date_int % 10) {
+                case 1:
+                    suffix = "st";
+                    break;
+                case 2:
+                    suffix = "nd";
+                    break;
+                case 3:
+                    suffix = "rd";
+                    break;
+                default:
+                    suffix = "th";
+            }
+        }
+        let _formatted = days[date.getDay()] + ", " + months[date.getMonth()] + " " + date_int + suffix;
+        this.setState({ date: date.getDate(), formatted: _formatted })
     }
 
     handleSubmit(e) {
@@ -67,15 +99,6 @@ class Schedule extends React.Component {
     //<div>Date Chosen: {this.state.date.getUTCDay()} </div>
 
     handleMeetingButton(e) {
-        // e.preventDefault();
-        // debugger
-        // let currentUserId = this.props.currentUser.id;
-        // debugger
-        // let meetingId = e.target.value;
-        // debugger
-        // let updatedMeeting = Object.assign(this.props.meetings[meetingId], {patient_id: currentUserId});
-        // debugger
-        // this.props.updateMeeting(updatedMeeting)
         let meetingId = e.target.value;
         this.props.history.push(`/meeting_confirm/${meetingId}`);
     }
@@ -84,19 +107,20 @@ class Schedule extends React.Component {
         // momentObject.toString()
         // momentObject.format()
         // momentObject.toISOString()
-        debugger
         if (!("available_date" in this.props.meetings)) {
+            debugger
             return null;
         }
         let meetings = this.props.meetings;
-        debugger
         let meetings_array = Object.values(meetings);
+        meetings_array.pop(); //remove key-value pair with key "available-date"
+        meetings_array.pop(); //remove key-value pair with key "time_zone"
         debugger
         return (
             <div id="schedule">
-                <div>Times shown in America/New_York clock. Current time is {this.state.curr_time}</div>
-                
+                <LoginNavBar/>
                 <Calendar 
+                    className="schedule-calendar"
                     onClickDay={this.onChange}
                     value={this.state.calendar_val}
                     minDate={new Date()}
@@ -104,36 +128,50 @@ class Schedule extends React.Component {
                     prev2Label={null}
                     next2Label={null}
                     minDetail="month"
-                    tileClassName={({ activeStartDate, date, view }) => {
+                    tileDisabled={({ activeStartDate, date, view }) => {
                         // [{year: ..., month: ..., date: ...}, ...]
                         //&& this.props.meetings.available_date.includes(date.getDate()) ? "available-date" : null
-                        debugger
                         let date_moment = moment(date);
                         let year_month_date = date_moment.year() + "-" + date_moment.month() + "-" + date_moment.date();
                         if (view !== 'month') {
-                            return
+                            return false
                         }
-                        if (year_month_date in this.props.meetings.available_date) {
-                            return "available-date"
+                        if (!(year_month_date in this.props.meetings.available_date)) {
+                            return true
                         } 
                     }}
                 />
                 <div className="available-times-tables">
-                    <ul>
-                    {meetings_array.slice(0).map((meeting, key) => {
-                        if (meeting.date != this.state.date) {
-                            return
-                        }
-                        if (!meeting.patient_id) {
+                    <div className="today-date">
+                        <div>{this.state.formatted}</div>
+                    </div>
+                    <ul className="slots-ul">
+                        {meetings_array.slice(0).map((meeting, key) => {
+                            if (meeting.date != this.state.date) {
+                                debugger
+                                return
+                            }
+                            debugger
+                            if (!meeting.patient_id) {
+                                debugger
+                                return <div key={key}>
+                                        <button className="slot-unselected" value={meeting.id} onClick={this.handleMeetingButton}>{meeting.time_formatted}</button>
+                                    </div> 
+                            }
+                            debugger
                             return <div key={key}>
-                                    <button className="slot-unselected" value={meeting.id} onClick={this.handleMeetingButton}>{meeting.formatted}</button>
-                                </div> 
-                        }
-                        return <div key={key}>
-                                    <button className="slot-selected" value={meeting.id} onClick={this.handleMeetingButton}>{meeting.formatted}</button>
-                                </div> 
-                    })}
+                                        <button disabled className="slot-selected" value={meeting.id} onClick={this.handleMeetingButton}>{meeting.time_formatted}</button>
+                                    </div> 
+                        })}
                     </ul>
+                </div>
+                <div>
+                    Times shown in {this.state.time_zone} clock.
+                    <form onSubmit={this.submitNewTimeZone}>
+                        Time Zone:
+                        <input placeholder="ie) America+Los_Angeles" onChange={this.timeZoneFormChange} value={this.state.time_zone_form} type="text"/>
+                        <button>submit</button>
+                    </form>
                 </div>
             </div>
         )

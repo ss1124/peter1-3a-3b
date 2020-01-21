@@ -22,6 +22,8 @@ class Index extends React.Component {
         <Link to="/care_select">Care Select</Link>
         <br/>
         <Link to="/schedule">schedule</Link>
+        <br/>
+        <Link to="/doc_availability_form">Select Availability (for doctors)</Link>
       </div>
     )
   }

@@ -7,5 +7,5 @@ Rails.application.routes.draw do
     resources :meetings, only: [:index, :update,  :show, :create, :destroy]
   end
   debugger
-  get 'api/meetings/show_slots_of_doctor/:id', to: 'api/meetings#show_slots_of_doctor'
+  get 'api/meetings/show_slots_of_doctor/:id/:time_zone', to: 'api/meetings#show_slots_of_doctor'
 end
