@@ -1197,6 +1197,7 @@ function (_React$Component) {
     _this.handleClickMonth = _this.handleClickMonth.bind(_assertThisInitialized(_this));
     _this.timeZoneFormChange = _this.timeZoneFormChange.bind(_assertThisInitialized(_this));
     _this.submitNewTimeZone = _this.submitNewTimeZone.bind(_assertThisInitialized(_this));
+    _this.showTimeZoneForm = _this.showTimeZoneForm.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1213,12 +1214,19 @@ function (_React$Component) {
       });
     }
   }, {
+    key: "showTimeZoneForm",
+    value: function showTimeZoneForm() {
+      var form = document.getElementById("timezone-form");
+      form.classList.toggle("hidden"); // form.classList.add("shown");
+    }
+  }, {
     key: "submitNewTimeZone",
     value: function submitNewTimeZone(e) {
       var _this3 = this;
 
       e.preventDefault();
-      this.props.showSlotsOfDoctor(1, this.state.time_zone_form).then(function () {
+      debugger;
+      this.props.showSlotsOfDoctor(1, e.target.value).then(function () {
         _this3.setState({
           time_zone: _this3.props.time_zone
         });
@@ -1333,7 +1341,26 @@ function (_React$Component) {
       debugger;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "schedule"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_login_nav_bar_login_nav_bar__WEBPACK_IMPORTED_MODULE_3__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_calendar__WEBPACK_IMPORTED_MODULE_2___default.a, {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_login_nav_bar_login_nav_bar__WEBPACK_IMPORTED_MODULE_3__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "flex-col"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "flex-row"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Times shown in ", this.state.time_zone, " clock. "), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        onClick: this.showTimeZoneForm,
+        className: "change-button"
+      }, "Change")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+        id: "timezone-form",
+        className: "hidden",
+        onSubmit: this.submitNewTimeZone
+      }, "Select Your Location:", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        value: "America+Los_Angeles"
+      }, "Los Angeles, CA"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        value: "America+New_York"
+      }, "New York, NY"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        value: "Asia+Seoul"
+      }, "Seoul, South Korea"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        value: "Europe+Stockholm"
+      }, "Stockholm, Sweden"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_calendar__WEBPACK_IMPORTED_MODULE_2___default.a, {
         className: "schedule-calendar",
         onClickDay: this.onChange,
         value: this.state.calendar_val,
@@ -1393,14 +1420,7 @@ function (_React$Component) {
           value: meeting.id,
           onClick: _this4.handleMeetingButton
         }, meeting.time_formatted));
-      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Times shown in ", this.state.time_zone, " clock.", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
-        onSubmit: this.submitNewTimeZone
-      }, "Time Zone:", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        placeholder: "ie) America+Los_Angeles",
-        onChange: this.timeZoneFormChange,
-        value: this.state.time_zone_form,
-        type: "text"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "submit"))));
+      }))));
     }
   }]);
 

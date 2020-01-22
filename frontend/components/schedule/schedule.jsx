@@ -23,6 +23,7 @@ class Schedule extends React.Component {
         this.handleClickMonth = this.handleClickMonth.bind(this);
         this.timeZoneFormChange = this.timeZoneFormChange.bind(this);
         this.submitNewTimeZone = this.submitNewTimeZone.bind(this);
+        this.showTimeZoneForm = this.showTimeZoneForm.bind(this);
     }
 
     componentDidMount() {
@@ -31,10 +32,18 @@ class Schedule extends React.Component {
             .then(() => {this.setState({time_zone: this.props.time_zone})})
     }
 
+    showTimeZoneForm() {
+        let form = document.getElementById("timezone-form");
+        form.classList.toggle("hidden");
+        // form.classList.add("shown");
+    }
+
     submitNewTimeZone(e) {
         e.preventDefault();
-        this.props.showSlotsOfDoctor(1, this.state.time_zone_form)
+        debugger
+        this.props.showSlotsOfDoctor(1, e.target.value)
             .then(() => {this.setState({time_zone: this.props.time_zone})})
+        
     }
 
     timeZoneFormChange(e) {
@@ -119,6 +128,20 @@ class Schedule extends React.Component {
         return (
             <div id="schedule">
                 <LoginNavBar/>
+                <div className="flex-col">
+                    <div className="flex-row">
+                        <p>Times shown in {this.state.time_zone} clock. </p>
+                        &nbsp;
+                        <p onClick={this.showTimeZoneForm} className="change-button">Change</p>
+                    </div>
+                    <form id="timezone-form" className="hidden" onSubmit={this.submitNewTimeZone}>
+                        Select Your Location:
+                        <button value="America+Los_Angeles">Los Angeles, CA</button>
+                        <button value="America+New_York">New York, NY</button>
+                        <button value="Asia+Seoul">Seoul, South Korea</button>
+                        <button value="Europe+Stockholm">Stockholm, Sweden</button>
+                    </form>
+                </div>
                 <Calendar 
                     className="schedule-calendar"
                     onClickDay={this.onChange}
@@ -164,14 +187,6 @@ class Schedule extends React.Component {
                                     </div> 
                         })}
                     </ul>
-                </div>
-                <div>
-                    Times shown in {this.state.time_zone} clock.
-                    <form onSubmit={this.submitNewTimeZone}>
-                        Time Zone:
-                        <input placeholder="ie) America+Los_Angeles" onChange={this.timeZoneFormChange} value={this.state.time_zone_form} type="text"/>
-                        <button>submit</button>
-                    </form>
                 </div>
             </div>
         )
