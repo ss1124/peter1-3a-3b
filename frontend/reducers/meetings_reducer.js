@@ -7,12 +7,10 @@ const meetingsReducer = (state = {}, action) => {
     Object.freeze(state);
     switch (action.type) {
         case RECEIVE_MEETING:
-            debugger
             return Object.assign({}, state, { [action.meeting.id]: action.meeting});
         case RECEIVE_ALL_MEETINGS:
             let meetings = action.meetings;
             let available_date = {};
-            debugger
             let time_zone = meetings.time_zone.split("+").join("/");
             Object.keys(meetings).forEach(function(key,index) {
                 if (key == "time_zone") {
@@ -37,7 +35,6 @@ const meetingsReducer = (state = {}, action) => {
             meetings.time_zone = time_zone;
             meetings.available_date = available_date;
             let newState = Object.assign({}, state, meetings)
-            debugger
             return newState
         default:
             return state;

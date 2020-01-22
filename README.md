@@ -24,6 +24,10 @@ To Do:
     - Not responsive to mobile screen sizes.
     - User can switch to register form by clicking on "create account" above form
     
+schedule
+- Days where all the slots are now passed shouldn't be highlighted.
+- Los Angeles disables today, which shouldn't happen.
+- removed height of form when no date is chosen. Make sure it looks good when a date is chosen.
 
 
 

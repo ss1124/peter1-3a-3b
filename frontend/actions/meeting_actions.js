@@ -40,9 +40,7 @@ export const fetchMeeting = (id) => dispatch => {
 }
 
 export const createMeeting = (meeting) => dispatch => {
-  debugger
   return API_Meeting_Util.createMeeting(meeting).then(meeting => {
-    debugger
     return dispatch(receiveMeeting(meeting))
   });
 }
@@ -60,7 +58,6 @@ export const deleteMeeting = (id) => dispatch => {
 }
 
 export const showSlotsOfDoctor = (id, time_zone) => dispatch => {
-  debugger
   return API_Meeting_Util.showSlotsOfDoctor(id, time_zone).then(meetings => {
     return dispatch(receiveMeetings(meetings))
   })

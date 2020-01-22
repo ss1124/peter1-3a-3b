@@ -15,7 +15,6 @@ export const createMeeting = (meeting) => {
 }
 
 export const fetchMeeting = (id) => {
-  debugger
   return $.ajax({
     method: "GET",
     url: `api/meetings/${id}`,
@@ -39,7 +38,6 @@ export const deleteMeeting = (id) => {
 }
 
 export const showSlotsOfDoctor = (id, time_zone) => {
-  debugger
   return $.ajax({
     method: "GET",
     url: `api/meetings/show_slots_of_doctor/${id}/${time_zone}`,

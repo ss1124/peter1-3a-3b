@@ -3,9 +3,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    
 
     #timezone-form {
-        width: 70%;
+        width: 100%;
         border-radius: 0.5rem;
         box-shadow: 0 0 4px rgba(0, 0, 0, 0.1), 0 5px 20px rgba(0, 0, 0, 0.05);
         margin-top: 2vh;
@@ -14,12 +15,28 @@
         align-items: center;
         flex-direction: column;
         margin-bottom: 3vh;
+        padding: 1vh 0;
+        > p {
+            width: 100%;
+            margin: 1vh;
+            text-align: center;
+        }
+        > button {
+            width: 40%;
+            color: #ed474c;
+            cursor: pointer;
+            margin: 1vh;
+            border-radius: 0.2rem;
+            padding: 1vh;
+            border: 1px solid #e8e8e8;
+        }
     } 
 
     .flex-col {
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 70%;
     }
 
     .flex-row {
@@ -38,6 +55,7 @@
     .change-button {
         color: blue;
         text-decoration: underline;
+        cursor: pointer;
     }
 
     .schedule-calendar {
@@ -56,7 +74,6 @@
         > .slots-ul {
             display: flex;
             margin: 0;
-            padding: 2vh;
             justify-content: center;
             flex-direction: column;
             align-items: center;
@@ -77,13 +94,10 @@
             color: grey;
         }
         > .today-date {
-            height: 5vh;
             width: 100%;
             display: flex;
             justify-content: center;
-            align-items: center;
-            margin-top: 2vh;
-            
+            align-items: center;        
         }
     }
 }

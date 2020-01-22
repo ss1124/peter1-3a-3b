@@ -147,9 +147,7 @@ var fetchMeeting = function fetchMeeting(id) {
 };
 var createMeeting = function createMeeting(meeting) {
   return function (dispatch) {
-    debugger;
     return _util_meeting_api_util__WEBPACK_IMPORTED_MODULE_0__["createMeeting"](meeting).then(function (meeting) {
-      debugger;
       return dispatch(receiveMeeting(meeting));
     });
   };
@@ -170,7 +168,6 @@ var deleteMeeting = function deleteMeeting(id) {
 };
 var showSlotsOfDoctor = function showSlotsOfDoctor(id, time_zone) {
   return function (dispatch) {
-    debugger;
     return _util_meeting_api_util__WEBPACK_IMPORTED_MODULE_0__["showSlotsOfDoctor"](id, time_zone).then(function (meetings) {
       return dispatch(receiveMeetings(meetings));
     });
@@ -1187,17 +1184,16 @@ function (_React$Component) {
       date: null,
       calendar_val: null,
       formatted: null,
-      time_zone: null,
-      time_zone_form: ""
+      time_zone: null
     };
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     _this.onChange = _this.onChange.bind(_assertThisInitialized(_this));
     _this.getTime = _this.getTime.bind(_assertThisInitialized(_this));
     _this.handleMeetingButton = _this.handleMeetingButton.bind(_assertThisInitialized(_this));
     _this.handleClickMonth = _this.handleClickMonth.bind(_assertThisInitialized(_this));
-    _this.timeZoneFormChange = _this.timeZoneFormChange.bind(_assertThisInitialized(_this));
     _this.submitNewTimeZone = _this.submitNewTimeZone.bind(_assertThisInitialized(_this));
     _this.showTimeZoneForm = _this.showTimeZoneForm.bind(_assertThisInitialized(_this));
+    _this.tileIsDisabled = _this.tileIsDisabled.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1214,10 +1210,47 @@ function (_React$Component) {
       });
     }
   }, {
+    key: "tileIsDisabled",
+    value: function tileIsDisabled(obj) {
+      var activeStartDate = obj.activeStartDate;
+      var date = obj.date;
+      var view = obj.view;
+      var date_moment = moment(date);
+      var year_month_date = date_moment.year() + "-" + date_moment.month() + "-" + date_moment.date(); // if (view !== 'month') {
+      //     debugger
+      //     return false //disabled
+      // }
+
+      debugger;
+
+      if (moment().tz(this.props.time_zone).isAfter(date, "day")) {
+        //if date is before now, disable the tile.
+        debugger;
+        return true; // disabled
+      }
+
+      if (!(year_month_date in this.props.meetings.available_date)) {
+        debugger;
+        return true; // disabled
+      }
+
+      debugger;
+      return false; // not disabled
+    }
+  }, {
     key: "showTimeZoneForm",
     value: function showTimeZoneForm() {
       var form = document.getElementById("timezone-form");
-      form.classList.toggle("hidden"); // form.classList.add("shown");
+      form.classList.toggle("hidden");
+      var changeButton = document.querySelector(".change-button");
+
+      if (changeButton.innerHTML === "Change") {
+        changeButton.innerHTML = "Cancel";
+      } else {
+        changeButton.innerHTML = "Change";
+      }
+
+      debugger; // form.classList.add("shown");
     }
   }, {
     key: "submitNewTimeZone",
@@ -1225,21 +1258,15 @@ function (_React$Component) {
       var _this3 = this;
 
       e.preventDefault();
-      debugger;
       this.props.showSlotsOfDoctor(1, e.target.value).then(function () {
         _this3.setState({
-          time_zone: _this3.props.time_zone
+          time_zone: _this3.props.time_zone,
+          calendar_val: null,
+          date: null,
+          formatted: null
         });
       });
     }
-  }, {
-    key: "timeZoneFormChange",
-    value: function timeZoneFormChange(e) {
-      this.setState({
-        time_zone_form: e.target.value
-      });
-    } // submitNewTimeZone} onChange={this.timeZoneFormChange
-
   }, {
     key: "handleClickMonth",
     value: function handleClickMonth(_ref) {
@@ -1299,10 +1326,14 @@ function (_React$Component) {
         }
       }
 
-      var _formatted = days[date.getDay()] + ", " + months[date.getMonth()] + " " + date_int + suffix;
+      debugger;
+
+      var _formatted = days[date.getDay()] + ", " + months[date.getMonth()] + " " + date_int + suffix; // this.setState({ date: date.getDate(), formatted: _formatted })
+
 
       this.setState({
         date: date.getDate(),
+        calendar_val: date,
         formatted: _formatted
       });
     }
@@ -1324,11 +1355,9 @@ function (_React$Component) {
     value: function render() {
       var _this4 = this;
 
-      // momentObject.toString()
-      // momentObject.format()
-      // momentObject.toISOString()
+      debugger;
+
       if (!("available_date" in this.props.meetings)) {
-        debugger;
         return null;
       }
 
@@ -1338,7 +1367,6 @@ function (_React$Component) {
 
       meetings_array.pop(); //remove key-value pair with key "time_zone"
 
-      debugger;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "schedule"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_login_nav_bar_login_nav_bar__WEBPACK_IMPORTED_MODULE_3__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1348,44 +1376,32 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Times shown in ", this.state.time_zone, " clock. "), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         onClick: this.showTimeZoneForm,
         className: "change-button"
-      }, "Change")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+      }, "Change")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "timezone-form",
-        className: "hidden",
-        onSubmit: this.submitNewTimeZone
-      }, "Select Your Location:", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "hidden"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Select Your Location:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.submitNewTimeZone,
         value: "America+Los_Angeles"
       }, "Los Angeles, CA"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.submitNewTimeZone,
         value: "America+New_York"
       }, "New York, NY"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.submitNewTimeZone,
         value: "Asia+Seoul"
       }, "Seoul, South Korea"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.submitNewTimeZone,
         value: "Europe+Stockholm"
       }, "Stockholm, Sweden"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_calendar__WEBPACK_IMPORTED_MODULE_2___default.a, {
+        id: "main-calendar",
         className: "schedule-calendar",
         onClickDay: this.onChange,
-        value: this.state.calendar_val,
-        minDate: new Date() // minDetail="month"
+        value: this.state.calendar_val // minDetail="month"
+        // minDate={new Date()}
         ,
         prev2Label: null,
         next2Label: null,
         minDetail: "month",
-        tileDisabled: function tileDisabled(_ref2) {
-          var activeStartDate = _ref2.activeStartDate,
-              date = _ref2.date,
-              view = _ref2.view;
-          // [{year: ..., month: ..., date: ...}, ...]
-          //&& this.props.meetings.available_date.includes(date.getDate()) ? "available-date" : null
-          var date_moment = moment(date);
-          var year_month_date = date_moment.year() + "-" + date_moment.month() + "-" + date_moment.date();
-
-          if (view !== 'month') {
-            return false;
-          }
-
-          if (!(year_month_date in _this4.props.meetings.available_date)) {
-            return true;
-          }
-        }
+        tileDisabled: this.tileIsDisabled
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "available-times-tables"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1394,14 +1410,10 @@ function (_React$Component) {
         className: "slots-ul"
       }, meetings_array.slice(0).map(function (meeting, key) {
         if (meeting.date != _this4.state.date) {
-          debugger;
           return;
         }
 
-        debugger;
-
         if (!meeting.patient_id) {
-          debugger;
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             key: key
           }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -1411,7 +1423,6 @@ function (_React$Component) {
           }, meeting.time_formatted));
         }
 
-        debugger;
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           key: key
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -2004,13 +2015,11 @@ var meetingsReducer = function meetingsReducer() {
 
   switch (action.type) {
     case _actions_meeting_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_MEETING"]:
-      debugger;
       return Object.assign({}, state, _defineProperty({}, action.meeting.id, action.meeting));
 
     case _actions_meeting_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_ALL_MEETINGS"]:
       var meetings = action.meetings;
       var available_date = {};
-      debugger;
       var time_zone = meetings.time_zone.split("+").join("/");
       Object.keys(meetings).forEach(function (key, index) {
         if (key == "time_zone") {
@@ -2039,7 +2048,6 @@ var meetingsReducer = function meetingsReducer() {
       meetings.time_zone = time_zone;
       meetings.available_date = available_date;
       var newState = Object.assign({}, state, meetings);
-      debugger;
       return newState;
 
     default:
@@ -2253,7 +2261,6 @@ var createMeeting = function createMeeting(meeting) {
   });
 };
 var fetchMeeting = function fetchMeeting(id) {
-  debugger;
   return $.ajax({
     method: "GET",
     url: "api/meetings/".concat(id),
@@ -2276,7 +2283,6 @@ var deleteMeeting = function deleteMeeting(id) {
   });
 };
 var showSlotsOfDoctor = function showSlotsOfDoctor(id, time_zone) {
-  debugger;
   return $.ajax({
     method: "GET",
     url: "api/meetings/show_slots_of_doctor/".concat(id, "/").concat(time_zone)

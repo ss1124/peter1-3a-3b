@@ -14,16 +14,15 @@ class Schedule extends React.Component {
             calendar_val: null,
             formatted: null,
             time_zone: null,
-            time_zone_form: "",
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
         this.getTime = this.getTime.bind(this);
         this.handleMeetingButton = this.handleMeetingButton.bind(this);
         this.handleClickMonth = this.handleClickMonth.bind(this);
-        this.timeZoneFormChange = this.timeZoneFormChange.bind(this);
         this.submitNewTimeZone = this.submitNewTimeZone.bind(this);
         this.showTimeZoneForm = this.showTimeZoneForm.bind(this);
+        this.tileIsDisabled = this.tileIsDisabled.bind(this);
     }
 
     componentDidMount() {
@@ -32,27 +31,51 @@ class Schedule extends React.Component {
             .then(() => {this.setState({time_zone: this.props.time_zone})})
     }
 
+    tileIsDisabled(obj) {
+        let activeStartDate = obj.activeStartDate;
+        let date = obj.date;
+        let view = obj.view;
+
+        let date_moment = moment(date);
+        let year_month_date = date_moment.year() + "-" + date_moment.month() + "-" + date_moment.date();
+        // if (view !== 'month') {
+        //     debugger
+        //     return false //disabled
+        // }
+        
+        debugger
+        if (moment().tz(this.props.time_zone).isAfter(date, "day")) { //if date is before now, disable the tile.
+            debugger
+            return true // disabled
+        }
+        if (!(year_month_date in this.props.meetings.available_date)) {
+            debugger
+            return true // disabled
+        } 
+        debugger
+        return false // not disabled
+        
+    }
+
     showTimeZoneForm() {
         let form = document.getElementById("timezone-form");
         form.classList.toggle("hidden");
+        let changeButton = document.querySelector(".change-button");
+        if (changeButton.innerHTML === "Change") {
+            changeButton.innerHTML = "Cancel";
+        } else {
+            changeButton.innerHTML = "Change";
+        }
+        debugger
         // form.classList.add("shown");
     }
 
     submitNewTimeZone(e) {
         e.preventDefault();
-        debugger
         this.props.showSlotsOfDoctor(1, e.target.value)
-            .then(() => {this.setState({time_zone: this.props.time_zone})})
+            .then(() => {this.setState({time_zone: this.props.time_zone, calendar_val: null, date: null, formatted: null})})
         
     }
-
-    timeZoneFormChange(e) {
-        this.setState({time_zone_form: e.target.value})
-    }
-
-
-
-    // submitNewTimeZone} onChange={this.timeZoneFormChange
 
     handleClickMonth({ activeStartDate, view }) {
         debugger
@@ -97,8 +120,10 @@ class Schedule extends React.Component {
                     suffix = "th";
             }
         }
+        debugger
         let _formatted = days[date.getDay()] + ", " + months[date.getMonth()] + " " + date_int + suffix;
-        this.setState({ date: date.getDate(), formatted: _formatted })
+        // this.setState({ date: date.getDate(), formatted: _formatted })
+        this.setState({date: date.getDate(), calendar_val: date, formatted: _formatted})
     }
 
     handleSubmit(e) {
@@ -113,18 +138,14 @@ class Schedule extends React.Component {
     }
 
     render() {
-        // momentObject.toString()
-        // momentObject.format()
-        // momentObject.toISOString()
+        debugger
         if (!("available_date" in this.props.meetings)) {
-            debugger
             return null;
         }
         let meetings = this.props.meetings;
         let meetings_array = Object.values(meetings);
         meetings_array.pop(); //remove key-value pair with key "available-date"
         meetings_array.pop(); //remove key-value pair with key "time_zone"
-        debugger
         return (
             <div id="schedule">
                 <LoginNavBar/>
@@ -134,35 +155,25 @@ class Schedule extends React.Component {
                         &nbsp;
                         <p onClick={this.showTimeZoneForm} className="change-button">Change</p>
                     </div>
-                    <form id="timezone-form" className="hidden" onSubmit={this.submitNewTimeZone}>
-                        Select Your Location:
-                        <button value="America+Los_Angeles">Los Angeles, CA</button>
-                        <button value="America+New_York">New York, NY</button>
-                        <button value="Asia+Seoul">Seoul, South Korea</button>
-                        <button value="Europe+Stockholm">Stockholm, Sweden</button>
-                    </form>
+                    <div id="timezone-form" className="hidden">
+                        <p>Select Your Location:</p>
+                        <button onClick={this.submitNewTimeZone} value="America+Los_Angeles">Los Angeles, CA</button>
+                        <button onClick={this.submitNewTimeZone} value="America+New_York">New York, NY</button>
+                        <button onClick={this.submitNewTimeZone} value="Asia+Seoul">Seoul, South Korea</button>
+                        <button onClick={this.submitNewTimeZone} value="Europe+Stockholm">Stockholm, Sweden</button>
+                    </div>
                 </div>
-                <Calendar 
+                <Calendar
+                    id="main-calendar" 
                     className="schedule-calendar"
                     onClickDay={this.onChange}
                     value={this.state.calendar_val}
-                    minDate={new Date()}
                     // minDetail="month"
+                    // minDate={new Date()}
                     prev2Label={null}
                     next2Label={null}
                     minDetail="month"
-                    tileDisabled={({ activeStartDate, date, view }) => {
-                        // [{year: ..., month: ..., date: ...}, ...]
-                        //&& this.props.meetings.available_date.includes(date.getDate()) ? "available-date" : null
-                        let date_moment = moment(date);
-                        let year_month_date = date_moment.year() + "-" + date_moment.month() + "-" + date_moment.date();
-                        if (view !== 'month') {
-                            return false
-                        }
-                        if (!(year_month_date in this.props.meetings.available_date)) {
-                            return true
-                        } 
-                    }}
+                    tileDisabled={this.tileIsDisabled}
                 />
                 <div className="available-times-tables">
                     <div className="today-date">
@@ -171,17 +182,13 @@ class Schedule extends React.Component {
                     <ul className="slots-ul">
                         {meetings_array.slice(0).map((meeting, key) => {
                             if (meeting.date != this.state.date) {
-                                debugger
                                 return
                             }
-                            debugger
                             if (!meeting.patient_id) {
-                                debugger
                                 return <div key={key}>
                                         <button className="slot-unselected" value={meeting.id} onClick={this.handleMeetingButton}>{meeting.time_formatted}</button>
                                     </div> 
                             }
-                            debugger
                             return <div key={key}>
                                         <button disabled className="slot-selected" value={meeting.id} onClick={this.handleMeetingButton}>{meeting.time_formatted}</button>
                                     </div> 
