@@ -504,7 +504,7 @@ function (_React$Component) {
     _this.state = {
       startTime: "2020-01-18 08:30",
       endTime: "2020-01-18 09:00",
-      time_zone: "America/Los_Angelos"
+      time_zone: "America/Los_Angeles"
     };
     _this.handleStartChange = _this.handleStartChange.bind(_assertThisInitialized(_this));
     _this.handleEndChange = _this.handleEndChange.bind(_assertThisInitialized(_this));
@@ -540,6 +540,12 @@ function (_React$Component) {
       e.preventDefault();
       var newYorkMomentBegin = moment_timezone__WEBPACK_IMPORTED_MODULE_2___default.a.tz(this.state.startTime, this.state.time_zone).format();
       var newYorkMomentEnd = moment_timezone__WEBPACK_IMPORTED_MODULE_2___default.a.tz(this.state.endTime, this.state.time_zone).format();
+      var meeting = {
+        begin_time: "".concat(newYorkMomentBegin),
+        end_time: "".concat(newYorkMomentEnd),
+        doctor_id: "1"
+      };
+      this.props.createMeeting(meeting);
     }
   }, {
     key: "render",

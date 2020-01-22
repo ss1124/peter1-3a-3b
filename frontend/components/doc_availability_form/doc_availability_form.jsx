@@ -11,7 +11,7 @@ class DocAvailabilityForm extends React.Component {
     this.state = {
         startTime: "2020-01-18 08:30",
         endTime: "2020-01-18 09:00",
-        time_zone: "America/Los_Angelos",
+        time_zone: "America/Los_Angeles",
     }
     this.handleStartChange = this.handleStartChange.bind(this);
     this.handleEndChange = this.handleEndChange.bind(this);
@@ -35,6 +35,13 @@ class DocAvailabilityForm extends React.Component {
     e.preventDefault();
     let newYorkMomentBegin = moment.tz(this.state.startTime, this.state.time_zone).format();
     let newYorkMomentEnd = moment.tz(this.state.endTime, this.state.time_zone).format();
+    let meeting = {
+      begin_time: `${newYorkMomentBegin}`,
+      end_time: `${newYorkMomentEnd}`,
+      doctor_id: `1`,
+    };
+    this.props.createMeeting(meeting)
+    
   }
 
 

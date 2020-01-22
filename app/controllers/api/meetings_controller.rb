@@ -11,12 +11,17 @@ class Api::MeetingsController < ApplicationController
   end
 
   def create
+    debugger
     @meeting = Meeting.new(meeting_params)
+    debugger
     if @meeting.save
+      debugger
       render "api/meetings/show"
     else
+      debugger
       render json: ["Try creating the meeting at a later time."]
     end
+    debugger
   end
 
   def destroy

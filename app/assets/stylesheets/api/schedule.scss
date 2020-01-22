@@ -22,6 +22,8 @@
             margin: 0;
             padding: 2vh;
             justify-content: center;
+            flex-direction: column;
+            align-items: center;
         }
 
         .slot-selected, .slot-unselected {
