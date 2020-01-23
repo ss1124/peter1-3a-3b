@@ -23,10 +23,10 @@ class Schedule extends React.Component {
         this.submitNewTimeZone = this.submitNewTimeZone.bind(this);
         this.showTimeZoneForm = this.showTimeZoneForm.bind(this);
         this.tileIsDisabled = this.tileIsDisabled.bind(this);
+        this.renderSelectedDateFormatted = this.renderSelectedDateFormatted.bind(this);
     }
 
     componentDidMount() {
-        debugger
         this.props.showSlotsOfDoctor(1, "America+Los_Angeles")
             .then(() => {this.setState({time_zone: this.props.time_zone})})
     }
@@ -35,26 +35,18 @@ class Schedule extends React.Component {
         let activeStartDate = obj.activeStartDate;
         let date = obj.date;
         let view = obj.view;
-
-        let date_moment = moment(date);
-        let year_month_date = date_moment.year() + "-" + date_moment.month() + "-" + date_moment.date();
-        // if (view !== 'month') {
-        //     debugger
-        //     return false //disabled
+        //check all meetings for each day, if there are no available meetings, disable the tile.
+        debugger
+        
+        // let date_moment = moment(date);
+        // let year_month_date = date_moment.year() + "-" + date_moment.month() + "-" + date_moment.date();
+        // if (moment().tz(this.props.time_zone).isAfter(date, "day")) { //if date is before now, disable the tile.
+        //     return true // disabled
         // }
-        
-        debugger
-        if (moment().tz(this.props.time_zone).isAfter(date, "day")) { //if date is before now, disable the tile.
-            debugger
-            return true // disabled
-        }
-        if (!(year_month_date in this.props.meetings.available_date)) {
-            debugger
-            return true // disabled
-        } 
-        debugger
-        return false // not disabled
-        
+        // if (!(year_month_date in this.props.meetings.available_date)) {
+        //     return true // disabled
+        // } 
+        // return false // not disabled
     }
 
     showTimeZoneForm() {
@@ -66,7 +58,6 @@ class Schedule extends React.Component {
         } else {
             changeButton.innerHTML = "Change";
         }
-        debugger
         // form.classList.add("shown");
     }
 
@@ -74,11 +65,11 @@ class Schedule extends React.Component {
         e.preventDefault();
         this.props.showSlotsOfDoctor(1, e.target.value)
             .then(() => {this.setState({time_zone: this.props.time_zone, calendar_val: null, date: null, formatted: null})})
+            .then(this.showTimeZoneForm)
         
     }
 
     handleClickMonth({ activeStartDate, view }) {
-        debugger
         alert('Changed view to: ', activeStartDate, view)
         this.props.showSlotsOfDoctor(1);
     }
@@ -98,7 +89,6 @@ class Schedule extends React.Component {
     }
 
     onChange(date) {
-        debugger
         let days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
         let months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
         let date_int = date.getDate();
@@ -120,7 +110,6 @@ class Schedule extends React.Component {
                     suffix = "th";
             }
         }
-        debugger
         let _formatted = days[date.getDay()] + ", " + months[date.getMonth()] + " " + date_int + suffix;
         // this.setState({ date: date.getDate(), formatted: _formatted })
         this.setState({date: date.getDate(), calendar_val: date, formatted: _formatted})
@@ -137,8 +126,15 @@ class Schedule extends React.Component {
         this.props.history.push(`/meeting_confirm/${meetingId}`);
     }
 
+    renderSelectedDateFormatted() {
+        if (this.state.formatted === null) {
+            return null;
+        } else {
+            return <div>{this.state.formatted}</div>;
+        }
+    }
+
     render() {
-        debugger
         if (!("available_date" in this.props.meetings)) {
             return null;
         }
@@ -177,7 +173,7 @@ class Schedule extends React.Component {
                 />
                 <div className="available-times-tables">
                     <div className="today-date">
-                        <div>{this.state.formatted}</div>
+                        {this.renderSelectedDateFormatted()}
                     </div>
                     <ul className="slots-ul">
                         {meetings_array.slice(0).map((meeting, key) => {

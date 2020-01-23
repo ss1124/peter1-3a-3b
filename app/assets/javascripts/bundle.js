@@ -1194,6 +1194,7 @@ function (_React$Component) {
     _this.submitNewTimeZone = _this.submitNewTimeZone.bind(_assertThisInitialized(_this));
     _this.showTimeZoneForm = _this.showTimeZoneForm.bind(_assertThisInitialized(_this));
     _this.tileIsDisabled = _this.tileIsDisabled.bind(_assertThisInitialized(_this));
+    _this.renderSelectedDateFormatted = _this.renderSelectedDateFormatted.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1202,7 +1203,6 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      debugger;
       this.props.showSlotsOfDoctor(1, "America+Los_Angeles").then(function () {
         _this2.setState({
           time_zone: _this2.props.time_zone
@@ -1214,28 +1214,17 @@ function (_React$Component) {
     value: function tileIsDisabled(obj) {
       var activeStartDate = obj.activeStartDate;
       var date = obj.date;
-      var view = obj.view;
-      var date_moment = moment(date);
-      var year_month_date = date_moment.year() + "-" + date_moment.month() + "-" + date_moment.date(); // if (view !== 'month') {
-      //     debugger
-      //     return false //disabled
+      var view = obj.view; //check all meetings for each day, if there are no available meetings, disable the tile.
+
+      debugger; // let date_moment = moment(date);
+      // let year_month_date = date_moment.year() + "-" + date_moment.month() + "-" + date_moment.date();
+      // if (moment().tz(this.props.time_zone).isAfter(date, "day")) { //if date is before now, disable the tile.
+      //     return true // disabled
       // }
-
-      debugger;
-
-      if (moment().tz(this.props.time_zone).isAfter(date, "day")) {
-        //if date is before now, disable the tile.
-        debugger;
-        return true; // disabled
-      }
-
-      if (!(year_month_date in this.props.meetings.available_date)) {
-        debugger;
-        return true; // disabled
-      }
-
-      debugger;
-      return false; // not disabled
+      // if (!(year_month_date in this.props.meetings.available_date)) {
+      //     return true // disabled
+      // } 
+      // return false // not disabled
     }
   }, {
     key: "showTimeZoneForm",
@@ -1248,9 +1237,8 @@ function (_React$Component) {
         changeButton.innerHTML = "Cancel";
       } else {
         changeButton.innerHTML = "Change";
-      }
+      } // form.classList.add("shown");
 
-      debugger; // form.classList.add("shown");
     }
   }, {
     key: "submitNewTimeZone",
@@ -1265,14 +1253,13 @@ function (_React$Component) {
           date: null,
           formatted: null
         });
-      });
+      }).then(this.showTimeZoneForm);
     }
   }, {
     key: "handleClickMonth",
     value: function handleClickMonth(_ref) {
       var activeStartDate = _ref.activeStartDate,
           view = _ref.view;
-      debugger;
       alert('Changed view to: ', activeStartDate, view);
       this.props.showSlotsOfDoctor(1);
     }
@@ -1299,7 +1286,6 @@ function (_React$Component) {
   }, {
     key: "onChange",
     value: function onChange(date) {
-      debugger;
       var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
       var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
       var date_int = date.getDate();
@@ -1326,8 +1312,6 @@ function (_React$Component) {
         }
       }
 
-      debugger;
-
       var _formatted = days[date.getDay()] + ", " + months[date.getMonth()] + " " + date_int + suffix; // this.setState({ date: date.getDate(), formatted: _formatted })
 
 
@@ -1351,11 +1335,18 @@ function (_React$Component) {
       this.props.history.push("/meeting_confirm/".concat(meetingId));
     }
   }, {
+    key: "renderSelectedDateFormatted",
+    value: function renderSelectedDateFormatted() {
+      if (this.state.formatted === null) {
+        return null;
+      } else {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.state.formatted);
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this4 = this;
-
-      debugger;
 
       if (!("available_date" in this.props.meetings)) {
         return null;
@@ -1406,7 +1397,7 @@ function (_React$Component) {
         className: "available-times-tables"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "today-date"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.state.formatted)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+      }, this.renderSelectedDateFormatted()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
         className: "slots-ul"
       }, meetings_array.slice(0).map(function (meeting, key) {
         if (meeting.date != _this4.state.date) {
